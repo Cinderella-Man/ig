@@ -60,7 +60,7 @@ defmodule Ig do
     {:ok, state}
   end
 
-  @spec fetch_accounts() :: %{atom => %Ig.Account{}}
+  @spec fetch_accounts() :: %{atom => pid()}
   def fetch_accounts() do
     GenServer.call(:IG, :fetch_accounts)
   end
@@ -78,9 +78,9 @@ defmodule Ig do
           | {:password, String.t()}
           | {:api_key, String.t()}
           | {:demo, boolean()}
-  @spec init_account({atom(), [credential]}) :: {atom(), %Ig.Account{}}
+  @spec init_account({atom(), [credential]}) :: {atom(), {:ok, pid()}}
   defp init_account({account_name, credentials}) do
-    {account_name, Ig.Account.new(credentials) |> Ig.Account.login()}
+    {:ok, pid} = Ig.Account.start_link(credentials, [name: account_name])
+    {account_name, pid}
   end
-
 end
