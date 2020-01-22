@@ -1,7 +1,8 @@
-defmodule Ig.Account do
+defmodule Ig.Subaccount do
   @moduledoc """
-  Account does heavy lifting for Ig process and holds all
-  account related informations in it's state:
+  Subaccount represents single "account" assigned to user
+  account and holds all account related informations in
+  it's state:
 
   ```
   defstruct [
@@ -11,7 +12,8 @@ defmodule Ig.Account do
     api_key: nil,
     cst: nil,
     security_token: nil,
-    lightstreamer_url: nil
+    lightstreamer_url: nil,
+    subaccounts: []
   ]
   ```
   """
@@ -26,7 +28,8 @@ defmodule Ig.Account do
               api_key: nil,
               cst: nil,
               security_token: nil,
-              lightstreamer_url: nil
+              lightstreamer_url: nil,
+              subaccounts: []
 
     use ExConstructor
   end
@@ -35,23 +38,12 @@ defmodule Ig.Account do
     GenServer.start_link(__MODULE__, arguments, options)
   end
 
-  def init(%{identifier: identifier, password: password, api_key: api_key, demo: demo}) do
-    {:ok, %HTTPoison.Response{body: body, headers: response_headers}} =
-      Ig.HTTPClient.post(demo, '/session', %{identifier: identifier, password: password}, [
-        {"X-IG-API-KEY", api_key}
-      ])
+  def init(account_details) do
+    {:ok, State.new(account_details)}
+  end
 
-    response_body = Jason.decode!(body)
-
-    {:ok, %State{
-      identifier: identifier,
-      password: password,
-      api_key: api_key,
-      demo: demo,
-      cst: Enum.find(response_headers, nil, &(elem(&1, 0) == "CST")),
-      security_token: Enum.find(response_headers, nil, &(elem(&1, 0) == "X-SECURITY-TOKEN")),
-      lightstreamer_url: Map.fetch!(response_body, "lightstreamerEndpoint")
-    }}
+  def login(pid) do
+    GenServer.call(pid, :login)
   end
 
   def get_state(pid) when is_pid(pid) do
@@ -60,5 +52,24 @@ defmodule Ig.Account do
 
   def handle_call(:get_state, _from, state) do
     {:reply, state, state}
+  end
+
+  def handle_cast(:login, %State{identifier: identifier, password: password, api_key: api_key, demo: demo}) do
+    {:ok, %HTTPoison.Response{body: body, headers: response_headers}} =
+      Ig.HTTPClient.post(demo, '/session', %{identifier: identifier, password: password}, [
+        {"X-IG-API-KEY", api_key}
+      ])
+
+    response_body = Jason.decode!(body)
+
+    {:noreply, %State{
+      identifier: identifier,
+      password: password,
+      api_key: api_key,
+      demo: demo,
+      cst: Enum.find(response_headers, nil, &(elem(&1, 0) == "CST")),
+      security_token: Enum.find(response_headers, nil, &(elem(&1, 0) == "X-SECURITY-TOKEN")),
+      lightstreamer_url: Map.fetch!(response_body, "lightstreamerEndpoint")
+    }}
   end
 end

@@ -5,8 +5,8 @@ defmodule Ig do
   It expects following config:
   ```
   config :ig,
-    accounts: %{
-      account_name: %{
+    users: %{
+      user_name: %{
         identifier: "...",
         password: "...",
         api_key: "...",
@@ -15,8 +15,8 @@ defmodule Ig do
     }
   ```
   where:
-  - `account_name` is a human readable reference that will be used
-  to point which account should be used (it can be any valid atom)
+  - `user_name` is a human readable reference that will be used
+  to point which user should be used (it can be any valid atom)
   - `identifier` is your username
   - `api_key` can be obtained from "My Account" on IG's dealing platform
   - `demo` confirms is that a demo account 
@@ -25,15 +25,27 @@ defmodule Ig do
   multiple accounts (for example to minimize the risk) just by referring
   to them using freely picked name.
 
-  Ig implements GenServer and on start it will grab all of those and
-  try to login using *all* of those accounts. It will hold generated tokens
-  and allow you to use multiple accounts in parallel.
+  To clarify - account is a whole user profile with assigned email. For 
+  example two accounts would mean that you use two completely seperate
+  profile with diffent login details, personal details etc. This can be
+  beneficial when for example one account is classified as "professional
+  trader" (with high margins available but without many safety gates) and
+  other one is retail customer (higher premiums but safety features).
+  It can also be used to mitigate increased margins when trading high volumes.
+
+  To sum up:
+  - account - single per person, you log in with it
+  - subaccount - listed as "accounts" in My IG
+
+  Ig holds spins further server per account and acts as a gateway to execute
+  any function on the account. It allows you to use multiple accounts in
+  parallel.
 
   """
   use GenServer
 
   defmodule State do
-    defstruct accounts: []
+    defstruct users: []
   end
 
   ## Public interface
@@ -52,23 +64,44 @@ defmodule Ig do
 
   @spec init(any) :: {:ok, %State{}}
   def init(_) do
-    state = %State{
-      accounts:
-        Enum.map(Application.get_env(:ig, :accounts) || [], &init_account/1) |> Enum.into(%{})
-    }
+    users = Enum.map(
+      Application.get_env(:ig, :users) || [], &init_account/1
+    ) |> Enum.into(%{})
 
-    {:ok, state}
+    {:ok, %State{
+      users: users
+    }}
   end
 
-  @spec fetch_accounts() :: %{atom => pid()}
-  def fetch_accounts() do
-    GenServer.call(:IG, :fetch_accounts)
+  @spec get_users() :: %{atom => pid()}
+  def get_users() do
+    GenServer.call(:IG, :get_users)
+  end
+
+  def login(account \\ nil) do
+    GenServer.call(:IG, {:login, account})
   end
 
   ## Callbacks
 
-  def handle_call(:fetch_accounts, _from, state) do
-    {:reply, state.accounts, state}
+  def handle_call(:get_users, _from, state) do
+    {:reply, state.users, state}
+  end
+
+  def handle_call({:login, nil}, _from, state) do
+    user = state.users
+    |> Map.keys
+    |> List.first
+
+    IO.inspect Map.get(state.users, user, nil)
+
+    user_data = login_user(Map.get(state.users, user, nil))
+    {:reply, user_data, state}
+  end
+
+  def handle_call({:login, user}, _from, state) do
+    user_data = login_user(Map.get(state.users, user, nil))
+    {:reply, user_data, state}
   end
 
   ## Private functions
@@ -79,8 +112,12 @@ defmodule Ig do
           | {:api_key, String.t()}
           | {:demo, boolean()}
   @spec init_account({atom(), [credential]}) :: {atom(), {:ok, pid()}}
-  defp init_account({account_name, credentials}) do
-    {:ok, pid} = Ig.Account.start_link(credentials, [name: account_name])
-    {account_name, pid}
+  defp init_account({user, credentials}) do
+    {:ok, pid} = Ig.User.start_link(credentials, [name: :"user-#{user}"])
+    {user, pid}
+  end
+
+  defp login_user(pid) do
+    Ig.User.login(pid)
   end
 end
