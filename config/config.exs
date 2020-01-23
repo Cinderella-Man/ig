@@ -3,12 +3,12 @@
 use Mix.Config
 
 config :ig,
-  accounts: %{
-    account_name: %{
+  users: %{
+    user_name: %{
       identifier: "...",
       password: "...",
       api_key: "...",
-      demo: false
+      demo: true
     }
   }
 
@@ -17,3 +17,6 @@ config :exvcr,
     "CST",
     "X-SECURITY-TOKEN"
   ]
+
+# This file will be included for convinience gitignored
+import_config "secret.exs"
