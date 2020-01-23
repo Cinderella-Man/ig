@@ -93,8 +93,6 @@ defmodule Ig do
     |> Map.keys
     |> List.first
 
-    IO.inspect Map.get(state.users, user, nil)
-
     user_data = login_user(Map.get(state.users, user, nil))
     {:reply, user_data, state}
   end
