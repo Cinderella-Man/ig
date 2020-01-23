@@ -3,7 +3,7 @@ defmodule Ig.HTTPClient do
   @demo_endpoint "https://demo-api.ig.com/gateway/deal"
 
   def post(is_demo, uri, body, headers \\ []) do
-    base_url = base_url(is_demo)
+    url = base_url(is_demo)
     body_string = Jason.encode!(body)
 
     complete_headers = [
@@ -12,7 +12,7 @@ defmodule Ig.HTTPClient do
       {"VERSION", 2} | headers
     ]
 
-    HTTPoison.post("https://demo-api.ig.com/gateway/deal#{uri}", body_string, complete_headers)
+    HTTPoison.post("#{url}#{uri}", body_string, complete_headers)
   end
 
   defp base_url(true), do: @demo_endpoint
