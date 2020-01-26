@@ -69,6 +69,10 @@ defmodule Ig.User do
     GenServer.call(pid, :login)
   end
 
+  def accounts(pid) do
+    GenServer.call(pid, :accounts)
+  end
+
   def get_state(pid) when is_pid(pid) do
     GenServer.call(pid, :get_state)
   end
@@ -80,7 +84,8 @@ defmodule Ig.User do
   def handle_call(:login, _from, %State{identifier: identifier, password: password, api_key: api_key, demo: demo}) do
     {:ok, %HTTPoison.Response{body: body, headers: response_headers}} =
       Ig.HTTPClient.post(demo, '/session', %{identifier: identifier, password: password}, [
-        {"X-IG-API-KEY", api_key}
+        {"X-IG-API-KEY", api_key},
+        {"VERSION", 2}
       ])
 
     response_body = Jason.decode!(body)
@@ -109,5 +114,19 @@ defmodule Ig.User do
     }
 
     {:reply, new_state, new_state}
+  end
+
+  def handle_call(:accounts, _from, %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.HTTPClient.get(demo, '/accounts', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 1}
+      ])
+
+    response_body = Jason.decode!(body)
+
+    {:reply, response_body, state}
   end
 end

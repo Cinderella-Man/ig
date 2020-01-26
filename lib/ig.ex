@@ -78,8 +78,12 @@ defmodule Ig do
     GenServer.call(:IG, :get_users)
   end
 
-  def login(account \\ nil) do
-    GenServer.call(:IG, {:login, account})
+  def login(user \\ nil) do
+    GenServer.call(:IG, {:login, user})
+  end
+
+  def accounts(user \\ nil) do
+    GenServer.call(:IG, {:accounts, user})
   end
 
   ## Callbacks
@@ -93,13 +97,27 @@ defmodule Ig do
     |> Map.keys
     |> List.first
 
-    user_data = login_user(Map.get(state.users, user, nil))
+    user_data = Ig.User.login(Map.get(state.users, user, nil))
     {:reply, user_data, state}
   end
 
   def handle_call({:login, user}, _from, state) do
-    user_data = login_user(Map.get(state.users, user, nil))
+    user_data = Ig.User.login(Map.get(state.users, user, nil))
     {:reply, user_data, state}
+  end
+
+  def handle_call({:accounts, nil}, _from, state) do
+    user = state.users
+    |> Map.keys
+    |> List.first
+
+    accounts = Ig.User.accounts(Map.get(state.users, user, nil))
+    {:reply, accounts, state}
+  end
+
+  def handle_call({:accounts, user}, _from, state) do
+    accounts = Ig.User.accounts(Map.get(state.users, user, nil))
+    {:reply, accounts, state}
   end
 
   ## Private functions
@@ -113,9 +131,5 @@ defmodule Ig do
   defp init_account({user, credentials}) do
     {:ok, pid} = Ig.User.start_link(credentials, [name: :"user-#{user}"])
     {user, pid}
-  end
-
-  defp login_user(pid) do
-    Ig.User.login(pid)
   end
 end
