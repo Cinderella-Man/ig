@@ -14,7 +14,8 @@ defmodule Ig.HTTPClient do
     complete_headers = default_headers() ++ headers
     full_url = "#{base_url(is_demo)}#{uri}"
 
-    body_string = if method == :get do
+    body_string =
+      if method == :get do
         ""
       else
         Jason.encode!(body)

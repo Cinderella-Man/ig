@@ -64,13 +64,17 @@ defmodule Ig do
 
   @spec init(any) :: {:ok, %State{}}
   def init(_) do
-    users = Enum.map(
-      Application.get_env(:ig, :users) || [], &init_account/1
-    ) |> Enum.into(%{})
+    users =
+      Enum.map(
+        Application.get_env(:ig, :users) || [],
+        &init_account/1
+      )
+      |> Enum.into(%{})
 
-    {:ok, %State{
-      users: users
-    }}
+    {:ok,
+     %State{
+       users: users
+     }}
   end
 
   @spec get_users() :: %{atom => pid()}
@@ -93,9 +97,10 @@ defmodule Ig do
   end
 
   def handle_call({:login, nil}, _from, state) do
-    user = state.users
-    |> Map.keys
-    |> List.first
+    user =
+      state.users
+      |> Map.keys()
+      |> List.first()
 
     user_data = Ig.User.login(Map.get(state.users, user, nil))
     {:reply, user_data, state}
@@ -107,9 +112,10 @@ defmodule Ig do
   end
 
   def handle_call({:accounts, nil}, _from, state) do
-    user = state.users
-    |> Map.keys
-    |> List.first
+    user =
+      state.users
+      |> Map.keys()
+      |> List.first()
 
     accounts = Ig.User.accounts(Map.get(state.users, user, nil))
     {:reply, accounts, state}
@@ -129,7 +135,7 @@ defmodule Ig do
           | {:demo, boolean()}
   @spec init_account({atom(), [credential]}) :: {atom(), {:ok, pid()}}
   defp init_account({user, credentials}) do
-    {:ok, pid} = Ig.User.start_link(credentials, [name: :"user-#{user}"])
+    {:ok, pid} = Ig.User.start_link(credentials, name: :"user-#{user}")
     {user, pid}
   end
 end

@@ -81,7 +81,12 @@ defmodule Ig.User do
     {:reply, state, state}
   end
 
-  def handle_call(:login, _from, %State{identifier: identifier, password: password, api_key: api_key, demo: demo}) do
+  def handle_call(:login, _from, %State{
+        identifier: identifier,
+        password: password,
+        api_key: api_key,
+        demo: demo
+      }) do
     {:ok, %HTTPoison.Response{body: body, headers: response_headers}} =
       Ig.HTTPClient.post(demo, '/session', %{identifier: identifier, password: password}, [
         {"X-IG-API-KEY", api_key},
@@ -96,7 +101,8 @@ defmodule Ig.User do
       password: password,
       api_key: api_key,
       cst: Enum.find(response_headers, {nil, nil}, &(elem(&1, 0) == "CST")) |> elem(1),
-      security_token: Enum.find(response_headers, {nil, nil}, &(elem(&1, 0) == "X-SECURITY-TOKEN")) |> elem(1),
+      security_token:
+        Enum.find(response_headers, {nil, nil}, &(elem(&1, 0) == "X-SECURITY-TOKEN")) |> elem(1),
       account_type: Map.fetch!(response_body, "accountType"),
       account_info: Map.fetch!(response_body, "accountInfo"),
       currency_iso_code: Map.fetch!(response_body, "currencyIsoCode"),
@@ -110,13 +116,17 @@ defmodule Ig.User do
       has_active_live_accounts: Map.fetch!(response_body, "hasActiveLiveAccounts"),
       trailing_stops_enabled: Map.fetch!(response_body, "trailingStopsEnabled"),
       rerouting_environment: Map.fetch!(response_body, "reroutingEnvironment"),
-      dealing_enabled: Map.fetch!(response_body, "dealingEnabled"),
+      dealing_enabled: Map.fetch!(response_body, "dealingEnabled")
     }
 
     {:reply, new_state, new_state}
   end
 
-  def handle_call(:accounts, _from, %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state) do
+  def handle_call(
+        :accounts,
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
     {:ok, %HTTPoison.Response{body: body}} =
       Ig.HTTPClient.get(demo, '/accounts', [
         {"X-IG-API-KEY", api_key},
@@ -127,6 +137,12 @@ defmodule Ig.User do
 
     response_body = Jason.decode!(body)
 
-    {:reply, response_body, state}
+    IO.inspect(response_body)
+
+    accounts =
+      response_body["accounts"]
+      |> Enum.map(&Ig.Account.new/1)
+
+    {:reply, accounts, state}
   end
 end
