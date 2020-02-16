@@ -9,7 +9,10 @@ defmodule IgTest do
 
   test "login using default(first) user" do
     use_cassette "login_ok" do
-      assert Ig.login() == %Ig.User.State{
+      {:ok, pid} = Ig.start_link([])
+      {:ok, result} = Ig.login(pid)
+      result = %{result | identifier: "***", password: "***", api_key: "***"}
+      assert result == %Ig.User.State{
                account_info: %{
                  "available" => 6031.0,
                  "balance" => 7640.0,
@@ -31,7 +34,7 @@ defmodule IgTest do
                    "preferred" => true
                  }
                ],
-               api_key: "IAG5JPWraNvGDI5sokzy",
+               api_key: "***",
                client_id: "101111111",
                cst: "***",
                currency_iso_code: "GBP",
@@ -41,9 +44,9 @@ defmodule IgTest do
                demo: true,
                has_active_demo_accounts: true,
                has_active_live_accounts: true,
-               identifier: "MyUser",
+               identifier: "***",
                lightstreamer_endpoint: "https://demo-apd.marketdatasystems.com",
-               password: "mySecretPassword",
+               password: "***",
                rerouting_environment: nil,
                security_token: "***",
                timezone_offset: 0,
@@ -52,45 +55,46 @@ defmodule IgTest do
     end
   end
 
-  # test "fetch accounts" do
-  #   use_cassette "accounts" do
-  #     Ig.login()
-  #     assert Ig.accounts() == [
-  #              %Ig.Account{
-  #                account_alias: nil,
-  #                account_id: "ZI5WH",
-  #                account_name: "Demo-cfd",
-  #                account_type: "CFD",
-  #                balance: %{
-  #                  "available" => 1.0e4,
-  #                  "balance" => 1.0e4,
-  #                  "deposit" => 0.0,
-  #                  "profitLoss" => 0.0
-  #                },
-  #                can_transfer_from: true,
-  #                can_transfer_to: true,
-  #                currency: "GBP",
-  #                preferred: false,
-  #                status: "ENABLED"
-  #              },
-  #              %Ig.Account{
-  #                account_alias: nil,
-  #                account_id: "ZI5WI",
-  #                account_name: "Demo-SpreadBet",
-  #                account_type: "SPREADBET",
-  #                balance: %{
-  #                  "available" => 9353.0,
-  #                  "balance" => 7640.0,
-  #                  "deposit" => 5907.0,
-  #                  "profitLoss" => 7620.0
-  #                },
-  #                can_transfer_from: true,
-  #                can_transfer_to: true,
-  #                currency: "GBP",
-  #                preferred: true,
-  #                status: "ENABLED"
-  #              }
-  #            ]
-  #   end
-  # end
+  test "fetch accounts" do
+    use_cassette "accounts" do
+      {:ok, pid} = Ig.start_link([])
+      {:ok, _state} = Ig.login(pid)
+      assert Ig.accounts(pid) == {:ok, [
+               %Ig.Account{
+                 account_alias: nil,
+                 account_id: "ZI5WH",
+                 account_name: "Demo-cfd",
+                 account_type: "CFD",
+                 balance: %{
+                   "available" => 1.0e4,
+                   "balance" => 1.0e4,
+                   "deposit" => 0.0,
+                   "profitLoss" => 0.0
+                 },
+                 can_transfer_from: true,
+                 can_transfer_to: true,
+                 currency: "GBP",
+                 preferred: false,
+                 status: "ENABLED"
+               },
+               %Ig.Account{
+                 account_alias: nil,
+                 account_id: "ZI5WI",
+                 account_name: "Demo-SpreadBet",
+                 account_type: "SPREADBET",
+                 balance: %{
+                   "available" => 10416.0,
+                   "balance" => 14530.0,
+                   "deposit" => 5724.0,
+                   "profitLoss" => 1610.0
+                 },
+                 can_transfer_from: true,
+                 can_transfer_to: true,
+                 currency: "GBP",
+                 preferred: true,
+                 status: "ENABLED"
+               }
+             ]}
+    end
+  end
 end

@@ -9,3 +9,10 @@ config :ig,
       demo: true
     }
   }
+
+config :exvcr,
+  filter_request_headers: [
+    "CST",
+    "X-SECURITY-TOKEN",
+    "X-IG-API-KEY"
+  ]

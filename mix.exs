@@ -16,8 +16,7 @@ defmodule Ig.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {Ig, []},
-      applications: [:exconstructor, :poison, :httpoison],
+      applications: [:exconstructor, :httpoison],
       extra_applications: [:logger]
     ]
   end
@@ -26,7 +25,6 @@ defmodule Ig.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.0"},
-      {:poison, "~> 4.0.0"},
       {:jason, "~> 1.1"},
       {:exconstructor, "~> 1.1.0"},
       {:ex_doc, ">= 0.0.0", only: :dev},

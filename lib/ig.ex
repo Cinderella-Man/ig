@@ -50,16 +50,9 @@ defmodule Ig do
 
   ## Public interface
 
-  @doc """
-  Required for starting from mix
-  """
-  def start(_type, _args) do
-    start_link(nil)
-  end
-
   @spec start_link(any) :: GenServer.on_start()
-  def start_link(_) do
-    GenServer.start_link(__MODULE__, nil, name: :IG)
+  def start_link(opts \\ []) do
+    GenServer.start_link(__MODULE__, nil, opts)
   end
 
   @spec init(any) :: {:ok, %State{}}
@@ -78,16 +71,16 @@ defmodule Ig do
   end
 
   @spec get_users() :: %{atom => pid()}
-  def get_users() do
-    GenServer.call(:IG, :get_users)
+  def get_users(pid \\ :IG) do
+    GenServer.call(pid, :get_users)
   end
 
-  def login(user \\ nil) do
-    GenServer.call(:IG, {:login, user})
+  def login(pid \\ :IG, user \\ nil) do
+    GenServer.call(pid, {:login, user})
   end
 
-  def accounts(user \\ nil) do
-    GenServer.call(:IG, {:accounts, user})
+  def accounts(pid \\ :IG, user \\ nil) do
+    GenServer.call(pid, {:accounts, user})
   end
 
   ## Callbacks
@@ -102,13 +95,13 @@ defmodule Ig do
       |> Map.keys()
       |> List.first()
 
-    user_data = Ig.User.login(Map.get(state.users, user, nil))
-    {:reply, user_data, state}
+    result = Ig.User.login(Map.get(state.users, user, nil))
+    {:reply, result, state}
   end
 
   def handle_call({:login, user}, _from, state) do
-    user_data = Ig.User.login(Map.get(state.users, user, nil))
-    {:reply, user_data, state}
+    result = Ig.User.login(Map.get(state.users, user, nil))
+    {:reply, result, state}
   end
 
   def handle_call({:accounts, nil}, _from, state) do
@@ -117,13 +110,13 @@ defmodule Ig do
       |> Map.keys()
       |> List.first()
 
-    accounts = Ig.User.accounts(Map.get(state.users, user, nil))
-    {:reply, accounts, state}
+    result = Ig.User.accounts(Map.get(state.users, user, nil))
+    {:reply, result, state}
   end
 
   def handle_call({:accounts, user}, _from, state) do
-    accounts = Ig.User.accounts(Map.get(state.users, user, nil))
-    {:reply, accounts, state}
+    result = Ig.User.accounts(Map.get(state.users, user, nil))
+    {:reply, result, state}
   end
 
   ## Private functions
