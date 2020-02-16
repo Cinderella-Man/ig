@@ -12,6 +12,7 @@ defmodule IgTest do
       {:ok, pid} = Ig.start_link([])
       {:ok, result} = Ig.login(pid)
       result = %{result | identifier: "***", password: "***", api_key: "***"}
+
       assert result == %Ig.User.State{
                account_info: %{
                  "available" => 6031.0,
@@ -59,42 +60,58 @@ defmodule IgTest do
     use_cassette "accounts" do
       {:ok, pid} = Ig.start_link([])
       {:ok, _state} = Ig.login(pid)
-      assert Ig.accounts(pid) == {:ok, [
-               %Ig.Account{
-                 account_alias: nil,
-                 account_id: "ZI5WH",
-                 account_name: "Demo-cfd",
-                 account_type: "CFD",
-                 balance: %{
-                   "available" => 1.0e4,
-                   "balance" => 1.0e4,
-                   "deposit" => 0.0,
-                   "profitLoss" => 0.0
-                 },
-                 can_transfer_from: true,
-                 can_transfer_to: true,
-                 currency: "GBP",
-                 preferred: false,
-                 status: "ENABLED"
-               },
-               %Ig.Account{
-                 account_alias: nil,
-                 account_id: "ZI5WI",
-                 account_name: "Demo-SpreadBet",
-                 account_type: "SPREADBET",
-                 balance: %{
-                   "available" => 10416.0,
-                   "balance" => 14530.0,
-                   "deposit" => 5724.0,
-                   "profitLoss" => 1610.0
-                 },
-                 can_transfer_from: true,
-                 can_transfer_to: true,
-                 currency: "GBP",
-                 preferred: true,
-                 status: "ENABLED"
-               }
-             ]}
+
+      assert Ig.accounts(pid) ==
+               {:ok,
+                [
+                  %Ig.Account{
+                    account_alias: nil,
+                    account_id: "ZI5WH",
+                    account_name: "Demo-cfd",
+                    account_type: "CFD",
+                    balance: %{
+                      "available" => 1.0e4,
+                      "balance" => 1.0e4,
+                      "deposit" => 0.0,
+                      "profitLoss" => 0.0
+                    },
+                    can_transfer_from: true,
+                    can_transfer_to: true,
+                    currency: "GBP",
+                    preferred: false,
+                    status: "ENABLED"
+                  },
+                  %Ig.Account{
+                    account_alias: nil,
+                    account_id: "ZI5WI",
+                    account_name: "Demo-SpreadBet",
+                    account_type: "SPREADBET",
+                    balance: %{
+                      "available" => 10416.0,
+                      "balance" => 14530.0,
+                      "deposit" => 5724.0,
+                      "profitLoss" => 1610.0
+                    },
+                    can_transfer_from: true,
+                    can_transfer_to: true,
+                    currency: "GBP",
+                    preferred: true,
+                    status: "ENABLED"
+                  }
+                ]}
+    end
+  end
+
+  test "fetch account preferences" do
+    use_cassette "account_preferences" do
+      {:ok, pid} = Ig.start_link([])
+      {:ok, _state} = Ig.login(pid)
+
+      assert Ig.account_preferences(pid) ==
+               {:ok,
+                %Ig.AccountPreference{
+                  trailing_stops_enabled: false
+                }}
     end
   end
 end

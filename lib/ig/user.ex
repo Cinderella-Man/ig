@@ -73,6 +73,10 @@ defmodule Ig.User do
     GenServer.call(pid, :accounts)
   end
 
+  def account_preferences(pid) do
+    GenServer.call(pid, :account_preferences)
+  end
+
   def get_state(pid) when is_pid(pid) do
     GenServer.call(pid, :get_state)
   end
@@ -120,5 +124,25 @@ defmodule Ig.User do
       |> Enum.map(&Ig.Account.new/1)
 
     {:reply, {:ok, accounts}, state}
+  end
+
+  def handle_call(
+        :account_preferences,
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, '/accounts/preferences', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 1}
+      ])
+
+    response_body = Jason.decode!(body)
+
+    account_preference = Ig.AccountPreference.new(response_body)
+
+    {:reply, {:ok, account_preference}, state}
   end
 end

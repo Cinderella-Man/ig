@@ -83,6 +83,10 @@ defmodule Ig do
     GenServer.call(pid, {:accounts, user})
   end
 
+  def account_preferences(pid \\ :IG, user \\ nil) do
+    GenServer.call(pid, {:account_preferences, user})
+  end
+
   ## Callbacks
 
   def handle_call(:get_users, _from, state) do
@@ -116,6 +120,21 @@ defmodule Ig do
 
   def handle_call({:accounts, user}, _from, state) do
     result = Ig.User.accounts(Map.get(state.users, user, nil))
+    {:reply, result, state}
+  end
+
+  def handle_call({:account_preferences, nil}, _from, state) do
+    user =
+      state.users
+      |> Map.keys()
+      |> List.first()
+
+    result = Ig.User.account_preferences(Map.get(state.users, user, nil))
+    {:reply, result, state}
+  end
+
+  def handle_call({:account_preferences, user}, _from, state) do
+    result = Ig.User.account_preferences(Map.get(state.users, user, nil))
     {:reply, result, state}
   end
 
