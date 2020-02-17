@@ -73,6 +73,10 @@ defmodule Ig.User do
     GenServer.call(pid, :accounts)
   end
 
+  def account_preferences(pid) do
+    GenServer.call(pid, :account_preferences)
+  end
+
   def get_state(pid) when is_pid(pid) do
     GenServer.call(pid, :get_state)
   end
@@ -87,39 +91,17 @@ defmodule Ig.User do
         api_key: api_key,
         demo: demo
       }) do
-    {:ok, %HTTPoison.Response{body: body, headers: response_headers}} =
-      Ig.HTTPClient.post(demo, '/session', %{identifier: identifier, password: password}, [
-        {"X-IG-API-KEY", api_key},
-        {"VERSION", 2}
-      ])
+    {:ok, result} = Ig.RestClient.login(demo, identifier, password, api_key)
 
-    response_body = Jason.decode!(body)
-
-    new_state = %State{
-      demo: demo,
-      identifier: identifier,
-      password: password,
-      api_key: api_key,
-      cst: Enum.find(response_headers, {nil, nil}, &(elem(&1, 0) == "CST")) |> elem(1),
-      security_token:
-        Enum.find(response_headers, {nil, nil}, &(elem(&1, 0) == "X-SECURITY-TOKEN")) |> elem(1),
-      account_type: Map.fetch!(response_body, "accountType"),
-      account_info: Map.fetch!(response_body, "accountInfo"),
-      currency_iso_code: Map.fetch!(response_body, "currencyIsoCode"),
-      currency_symbol: Map.fetch!(response_body, "currencySymbol"),
-      current_account_id: Map.fetch!(response_body, "currentAccountId"),
-      lightstreamer_endpoint: Map.fetch!(response_body, "lightstreamerEndpoint"),
-      accounts: Map.fetch!(response_body, "accounts"),
-      client_id: Map.fetch!(response_body, "clientId"),
-      timezone_offset: Map.fetch!(response_body, "timezoneOffset"),
-      has_active_demo_accounts: Map.fetch!(response_body, "hasActiveDemoAccounts"),
-      has_active_live_accounts: Map.fetch!(response_body, "hasActiveLiveAccounts"),
-      trailing_stops_enabled: Map.fetch!(response_body, "trailingStopsEnabled"),
-      rerouting_environment: Map.fetch!(response_body, "reroutingEnvironment"),
-      dealing_enabled: Map.fetch!(response_body, "dealingEnabled")
+    new_state = %{
+      State.new(result)
+      | identifier: identifier,
+        password: password,
+        api_key: api_key,
+        demo: demo
     }
 
-    {:reply, new_state, new_state}
+    {:reply, {:ok, new_state}, new_state}
   end
 
   def handle_call(
@@ -128,7 +110,7 @@ defmodule Ig.User do
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.HTTPClient.get(demo, '/accounts', [
+      Ig.RestClient.get(demo, '/accounts', [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
@@ -137,12 +119,30 @@ defmodule Ig.User do
 
     response_body = Jason.decode!(body)
 
-    IO.inspect(response_body)
-
     accounts =
       response_body["accounts"]
       |> Enum.map(&Ig.Account.new/1)
 
-    {:reply, accounts, state}
+    {:reply, {:ok, accounts}, state}
+  end
+
+  def handle_call(
+        :account_preferences,
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, '/accounts/preferences', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 1}
+      ])
+
+    response_body = Jason.decode!(body)
+
+    account_preference = Ig.AccountPreference.new(response_body)
+
+    {:reply, {:ok, account_preference}, state}
   end
 end
