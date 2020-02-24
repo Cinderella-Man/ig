@@ -87,6 +87,21 @@ defmodule Ig do
     GenServer.call(pid, {:account_preferences, user})
   end
 
+  @doc """
+  Returns the account activity history.
+
+  Optional params:
+  - from     (DateTime)	Start date
+  - to       (DateTime)	End date (Default = current time. A date without time component refers to the end of that day.)
+  - detailed (boolean) 	Indicates whether to retrieve additional details about the activity (default = false)
+  - dealId   (String) 	Deal ID
+  - filter   (String) 	FIQL filter (supported operators: ==|!=|,|;)
+  - pageSize (int) 	    Page size (min: 10, max: 500) (Default = 50)
+  """
+  def activity_history(optional \\ [], pid \\ :IG, user \\ nil) do
+    GenServer.call(pid, {:activity_history, optional, user})
+  end
+
   ## Callbacks
 
   def handle_call(:get_users, _from, state) do
@@ -135,6 +150,21 @@ defmodule Ig do
 
   def handle_call({:account_preferences, user}, _from, state) do
     result = Ig.User.account_preferences(Map.get(state.users, user, nil))
+    {:reply, result, state}
+  end
+
+  def handle_call({:activity_history, optional, nil}, _from, state) do
+    user =
+      state.users
+      |> Map.keys()
+      |> List.first()
+
+    result = Ig.User.activity_history(Map.get(state.users, user, nil), optional)
+    {:reply, result, state}
+  end
+
+  def handle_call({:activity_history, optional, user}, _from, state) do
+    result = Ig.User.activity_history(Map.get(state.users, user, nil), optional)
     {:reply, result, state}
   end
 

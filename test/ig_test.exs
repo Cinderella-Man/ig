@@ -87,10 +87,10 @@ defmodule IgTest do
                     account_name: "Demo-SpreadBet",
                     account_type: "SPREADBET",
                     balance: %{
-                      "available" => 10416.0,
-                      "balance" => 14530.0,
-                      "deposit" => 5724.0,
-                      "profitLoss" => 1610.0
+                      "available" => 16980.0,
+                      "balance" => 16980.0,
+                      "deposit" => 0.0,
+                      "profitLoss" => 0.0
                     },
                     can_transfer_from: true,
                     can_transfer_to: true,
@@ -112,6 +112,144 @@ defmodule IgTest do
                 %Ig.AccountPreference{
                   trailing_stops_enabled: false
                 }}
+    end
+  end
+
+  test "fetch historical activities" do
+    use_cassette "historical_activities" do
+      {:ok, pid} = Ig.start_link([])
+      {:ok, _state} = Ig.login(pid)
+
+      {:ok, result} = Ig.activity_history([from: "2020-01-01T00:00:00", detailed: true], pid)
+
+      assert result.metadata.paging.next == nil
+      assert result.metadata.paging.size == 4
+
+      assert result.activities == [
+               %Ig.HistoricalActivity{
+                 channel: "MOBILE",
+                 date: "2020-02-18T14:27:28",
+                 dealId: "DIAAAADC3TV43AN",
+                 description: "Rejected: 11",
+                 details: %Ig.HistoricalActivityDetail{
+                   actions: [],
+                   currency: "GBP",
+                   dealReference: "7RVM7N1E1CB3JSC",
+                   direction: "SELL",
+                   goodTillDate: nil,
+                   guaranteedStop: false,
+                   level: 77885,
+                   limitDistance: nil,
+                   limitLevel: nil,
+                   marketName: "Tesla Inc (DE)",
+                   size: 10000,
+                   stopDistance: nil,
+                   stopLevel: nil,
+                   trailingStep: nil,
+                   trailingStopDistance: nil
+                 },
+                 epic: "ED.D.TL0GY.DAILY.IP",
+                 period: "DFB",
+                 status: "REJECTED",
+                 type: "POSITION"
+               },
+               %Ig.HistoricalActivity{
+                 channel: "MOBILE",
+                 date: "2020-02-18T14:26:12",
+                 dealId: "DIAAAADC3U343AG",
+                 description: "Position/s closed: BDRWS2A4",
+                 details: %Ig.HistoricalActivityDetail{
+                   actions: [
+                     %{
+                       "actionType" => "POSITION_CLOSED",
+                       "affectedDealId" => "DIAAAADBDRWS2A4"
+                     }
+                   ],
+                   currency: "GBP",
+                   dealReference: "7RVM7N1E1CB21WH",
+                   direction: "BUY",
+                   goodTillDate: nil,
+                   guaranteedStop: false,
+                   level: 5643,
+                   limitDistance: nil,
+                   limitLevel: nil,
+                   marketName: "Oil - Brent Crude",
+                   size: 10,
+                   stopDistance: nil,
+                   stopLevel: nil,
+                   trailingStep: nil,
+                   trailingStopDistance: nil
+                 },
+                 epic: "EN.D.LCO.Month6.IP",
+                 period: "APR-20",
+                 status: "ACCEPTED",
+                 type: "POSITION"
+               },
+               %Ig.HistoricalActivity{
+                 channel: "SYSTEM",
+                 date: "2020-01-29T20:14:54",
+                 dealId: "DIAAAADBDRWS2A4",
+                 description: "Position rolled: BDRWS2A4",
+                 details: %Ig.HistoricalActivityDetail{
+                   actions: [
+                     %{
+                       "actionType" => "POSITION_ROLLED",
+                       "affectedDealId" => "DIAAAADBDRWS2A4"
+                     }
+                   ],
+                   currency: "GBP",
+                   dealReference: nil,
+                   direction: "SELL",
+                   goodTillDate: nil,
+                   guaranteedStop: false,
+                   level: 5888,
+                   limitDistance: nil,
+                   limitLevel: nil,
+                   marketName: "Oil - Brent Crude",
+                   size: 10,
+                   stopDistance: nil,
+                   stopLevel: nil,
+                   trailingStep: nil,
+                   trailingStopDistance: nil
+                 },
+                 epic: "EN.D.LCO.Month6.IP",
+                 period: "APR-20",
+                 status: "ACCEPTED",
+                 type: "POSITION"
+               },
+               %Ig.HistoricalActivity{
+                 channel: "SYSTEM",
+                 date: "2020-01-29T20:14:54",
+                 dealId: "DIAAAADBDRWSZA4",
+                 description: "Position/s closed: 8UC2QXAU",
+                 details: %Ig.HistoricalActivityDetail{
+                   actions: [
+                     %{
+                       "actionType" => "POSITION_CLOSED",
+                       "affectedDealId" => "DIAAAAC8UC2QXAU"
+                     }
+                   ],
+                   currency: "GBP",
+                   dealReference: nil,
+                   direction: "BUY",
+                   goodTillDate: nil,
+                   guaranteedStop: false,
+                   level: 5984,
+                   limitDistance: nil,
+                   limitLevel: nil,
+                   marketName: "Oil - Brent Crude",
+                   size: 10,
+                   stopDistance: nil,
+                   stopLevel: nil,
+                   trailingStep: nil,
+                   trailingStopDistance: nil
+                 },
+                 epic: "EN.D.LCO.Month5.IP",
+                 period: "MAR-20",
+                 status: "ACCEPTED",
+                 type: "POSITION"
+               }
+             ]
     end
   end
 end

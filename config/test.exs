@@ -15,4 +15,8 @@ config :exvcr,
     "CST",
     "X-SECURITY-TOKEN",
     "X-IG-API-KEY"
+  ],
+  filter_sensitive_data: [
+    [pattern: "\"password\":\"[a-zA-Z0-9_]+\"", placeholder: "\"password\":\"***\""],
+    [pattern: "\"identifier\":\"[a-zA-Z0-9_]+\"", placeholder: "\"identifier\":\"***\""]
   ]

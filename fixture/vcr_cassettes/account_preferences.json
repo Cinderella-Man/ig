@@ -1,7 +1,7 @@
 [
   {
     "request": {
-      "body": "{\"identifier\":\"MRTDEMOAPI\",\"password\":\"nhMtEWZ4qfdAuTc!!9d4\"}",
+      "body": "{\"identifier\":\"***\",\"password\":\"***\"}",
       "headers": {
         "Content-Type": "application/json; charset=UTF-8",
         "Accept": "application/json; charset=UTF-8",
@@ -15,7 +15,7 @@
     },
     "response": {
       "binary": false,
-      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":14530.0,\"deposit\":5727.5,\"profitLoss\":1570.0,\"available\":10372.5},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
+      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":16980.0,\"deposit\":0.0,\"profitLoss\":0.0,\"available\":16980.0},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
       "headers": {
         "Server": "HAProxy",
         "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
@@ -32,8 +32,8 @@
         "Expires": "0",
         "Content-Type": "application/json;charset=UTF-8",
         "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
-        "Date": "Sun, 16 Feb 2020 23:26:27 GMT",
-        "Content-Length": "629",
+        "Date": "Mon, 24 Feb 2020 17:19:54 GMT",
+        "Content-Length": "623",
         "Connection": "keep-alive"
       },
       "status_code": 200,
@@ -73,7 +73,7 @@
         "Expires": "0",
         "Content-Type": "application/json",
         "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
-        "Date": "Sun, 16 Feb 2020 23:26:27 GMT",
+        "Date": "Mon, 24 Feb 2020 17:19:54 GMT",
         "Content-Length": "30",
         "Connection": "keep-alive"
       },
