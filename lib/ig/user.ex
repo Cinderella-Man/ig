@@ -77,6 +77,10 @@ defmodule Ig.User do
     GenServer.call(pid, :account_preferences)
   end
 
+  def activity_history(pid, optional) do
+    GenServer.call(pid, {:activity_history, optional})
+  end
+
   def get_state(pid) when is_pid(pid) do
     GenServer.call(pid, :get_state)
   end
@@ -144,5 +148,43 @@ defmodule Ig.User do
     account_preference = Ig.AccountPreference.new(response_body)
 
     {:reply, {:ok, account_preference}, state}
+  end
+
+  def handle_call(
+        {:activity_history, optional},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    params = URI.encode_query(optional)
+
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/history/activity?#{params}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    %{
+      "activities" => activities_list,
+      "metadata" => %{
+        "paging" => %{
+          "next" => paging_next,
+          "size" => paging_size
+        }
+      }
+    } = Jason.decode!(body)
+
+    result = %{
+      activities:
+        activities_list
+        |> Enum.map(fn activity ->
+          activity_struct = Ig.HistoricalActivity.new(activity)
+          %{activity_struct | details: Ig.HistoricalActivityDetail.new(activity_struct.details)}
+        end),
+      metadata: %{paging: %{next: paging_next, size: paging_size}}
+    }
+
+    {:reply, {:ok, result}, state}
   end
 end

@@ -24,3 +24,5 @@ ig-*.tar
 
 # Elixir Language Server
 .elixir_ls
+
+config/secret.exs

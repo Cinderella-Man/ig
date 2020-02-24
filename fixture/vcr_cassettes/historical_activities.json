@@ -32,7 +32,7 @@
         "Expires": "0",
         "Content-Type": "application/json;charset=UTF-8",
         "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
-        "Date": "Mon, 24 Feb 2020 17:19:53 GMT",
+        "Date": "Mon, 24 Feb 2020 17:19:54 GMT",
         "Content-Length": "623",
         "Connection": "keep-alive"
       },
@@ -49,16 +49,16 @@
         "X-IG-API-KEY": "***",
         "X-SECURITY-TOKEN": "***",
         "CST": "***",
-        "VERSION": "1"
+        "VERSION": "3"
       },
       "method": "get",
       "options": [],
       "request_body": "",
-      "url": "https://demo-api.ig.com/gateway/deal/accounts"
+      "url": "https://demo-api.ig.com/gateway/deal/history/activity?from=2020-01-01T00%3A00%3A00&detailed=true"
     },
     "response": {
       "binary": false,
-      "body": "{\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"accountAlias\":null,\"status\":\"ENABLED\",\"accountType\":\"CFD\",\"preferred\":false,\"balance\":{\"balance\":10000.0,\"deposit\":0.0,\"profitLoss\":0.0,\"available\":10000.0},\"currency\":\"GBP\",\"canTransferFrom\":true,\"canTransferTo\":true},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"accountAlias\":null,\"status\":\"ENABLED\",\"accountType\":\"SPREADBET\",\"preferred\":true,\"balance\":{\"balance\":16980.0,\"deposit\":0.0,\"profitLoss\":0.0,\"available\":16980.0},\"currency\":\"GBP\",\"canTransferFrom\":true,\"canTransferTo\":true}]}",
+      "body": "{\"activities\":[{\"date\":\"2020-02-18T14:27:28\",\"epic\":\"ED.D.TL0GY.DAILY.IP\",\"period\":\"DFB\",\"dealId\":\"DIAAAADC3TV43AN\",\"channel\":\"MOBILE\",\"type\":\"POSITION\",\"status\":\"REJECTED\",\"description\":\"Rejected: 11\",\"details\":{\"dealReference\":\"7RVM7N1E1CB3JSC\",\"actions\":[],\"marketName\":\"Tesla Inc (DE)\",\"goodTillDate\":null,\"currency\":\"GBP\",\"size\":10000,\"direction\":\"SELL\",\"level\":77885,\"stopLevel\":null,\"stopDistance\":null,\"guaranteedStop\":false,\"trailingStopDistance\":null,\"trailingStep\":null,\"limitLevel\":null,\"limitDistance\":null}},{\"date\":\"2020-02-18T14:26:12\",\"epic\":\"EN.D.LCO.Month6.IP\",\"period\":\"APR-20\",\"dealId\":\"DIAAAADC3U343AG\",\"channel\":\"MOBILE\",\"type\":\"POSITION\",\"status\":\"ACCEPTED\",\"description\":\"Position/s closed: BDRWS2A4\",\"details\":{\"dealReference\":\"7RVM7N1E1CB21WH\",\"actions\":[{\"actionType\":\"POSITION_CLOSED\",\"affectedDealId\":\"DIAAAADBDRWS2A4\"}],\"marketName\":\"Oil - Brent Crude\",\"goodTillDate\":null,\"currency\":\"GBP\",\"size\":10,\"direction\":\"BUY\",\"level\":5643,\"stopLevel\":null,\"stopDistance\":null,\"guaranteedStop\":false,\"trailingStopDistance\":null,\"trailingStep\":null,\"limitLevel\":null,\"limitDistance\":null}},{\"date\":\"2020-01-29T20:14:54\",\"epic\":\"EN.D.LCO.Month6.IP\",\"period\":\"APR-20\",\"dealId\":\"DIAAAADBDRWS2A4\",\"channel\":\"SYSTEM\",\"type\":\"POSITION\",\"status\":\"ACCEPTED\",\"description\":\"Position rolled: BDRWS2A4\",\"details\":{\"dealReference\":null,\"actions\":[{\"actionType\":\"POSITION_ROLLED\",\"affectedDealId\":\"DIAAAADBDRWS2A4\"}],\"marketName\":\"Oil - Brent Crude\",\"goodTillDate\":null,\"currency\":\"GBP\",\"size\":10,\"direction\":\"SELL\",\"level\":5888,\"stopLevel\":null,\"stopDistance\":null,\"guaranteedStop\":false,\"trailingStopDistance\":null,\"trailingStep\":null,\"limitLevel\":null,\"limitDistance\":null}},{\"date\":\"2020-01-29T20:14:54\",\"epic\":\"EN.D.LCO.Month5.IP\",\"period\":\"MAR-20\",\"dealId\":\"DIAAAADBDRWSZA4\",\"channel\":\"SYSTEM\",\"type\":\"POSITION\",\"status\":\"ACCEPTED\",\"description\":\"Position/s closed: 8UC2QXAU\",\"details\":{\"dealReference\":null,\"actions\":[{\"actionType\":\"POSITION_CLOSED\",\"affectedDealId\":\"DIAAAAC8UC2QXAU\"}],\"marketName\":\"Oil - Brent Crude\",\"goodTillDate\":null,\"currency\":\"GBP\",\"size\":10,\"direction\":\"BUY\",\"level\":5984,\"stopLevel\":null,\"stopDistance\":null,\"guaranteedStop\":false,\"trailingStopDistance\":null,\"trailingStep\":null,\"limitLevel\":null,\"limitDistance\":null}}],\"metadata\":{\"paging\":{\"size\":4,\"next\":null}}}",
       "headers": {
         "Server": "HAProxy",
         "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
@@ -71,10 +71,10 @@
         "Cache-Control": "no-cache, no-store, must-revalidate",
         "Pragma": "no-cache",
         "Expires": "0",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
         "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
-        "Date": "Mon, 24 Feb 2020 17:19:53 GMT",
-        "Content-Length": "557",
+        "Date": "Mon, 24 Feb 2020 17:19:54 GMT",
+        "Content-Length": "2308",
         "Connection": "keep-alive"
       },
       "status_code": 200,

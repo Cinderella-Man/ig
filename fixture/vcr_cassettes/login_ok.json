@@ -1,7 +1,7 @@
 [
   {
     "request": {
-      "body": "{\"identifier\":\"MyUser\",\"password\":\"mySecretPassword\"}",
+      "body": "{\"identifier\":\"***\",\"password\":\"***\"}",
       "headers": {
         "Content-Type": "application/json; charset=UTF-8",
         "Accept": "application/json; charset=UTF-8",
