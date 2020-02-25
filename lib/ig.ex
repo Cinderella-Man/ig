@@ -50,6 +50,10 @@ defmodule Ig do
 
   ## Public interface
 
+  def start(_type, _args) do
+    start_link([name: :IG])
+  end
+
   @spec start_link(any) :: GenServer.on_start()
   def start_link(opts \\ []) do
     GenServer.start_link(__MODULE__, nil, opts)
@@ -70,36 +74,13 @@ defmodule Ig do
      }}
   end
 
-  @spec get_users() :: %{atom => pid()}
+  @spec get_users(pid()) :: %{atom => pid()}
   def get_users(pid \\ :IG) do
     GenServer.call(pid, :get_users)
   end
 
-  def login(pid \\ :IG, user \\ nil) do
-    GenServer.call(pid, {:login, user})
-  end
-
-  def accounts(pid \\ :IG, user \\ nil) do
-    GenServer.call(pid, {:accounts, user})
-  end
-
-  def account_preferences(pid \\ :IG, user \\ nil) do
-    GenServer.call(pid, {:account_preferences, user})
-  end
-
-  @doc """
-  Returns the account activity history.
-
-  Optional params:
-  - from     (DateTime)	Start date
-  - to       (DateTime)	End date (Default = current time. A date without time component refers to the end of that day.)
-  - detailed (boolean) 	Indicates whether to retrieve additional details about the activity (default = false)
-  - dealId   (String) 	Deal ID
-  - filter   (String) 	FIQL filter (supported operators: ==|!=|,|;)
-  - pageSize (int) 	    Page size (min: 10, max: 500) (Default = 50)
-  """
-  def activity_history(optional \\ [], pid \\ :IG, user \\ nil) do
-    GenServer.call(pid, {:activity_history, optional, user})
+  def get_user(user, pid \\ :IG) do
+    GenServer.call(pid, {:get_user, user})
   end
 
   ## Callbacks
@@ -108,64 +89,8 @@ defmodule Ig do
     {:reply, state.users, state}
   end
 
-  def handle_call({:login, nil}, _from, state) do
-    user =
-      state.users
-      |> Map.keys()
-      |> List.first()
-
-    result = Ig.User.login(Map.get(state.users, user, nil))
-    {:reply, result, state}
-  end
-
-  def handle_call({:login, user}, _from, state) do
-    result = Ig.User.login(Map.get(state.users, user, nil))
-    {:reply, result, state}
-  end
-
-  def handle_call({:accounts, nil}, _from, state) do
-    user =
-      state.users
-      |> Map.keys()
-      |> List.first()
-
-    result = Ig.User.accounts(Map.get(state.users, user, nil))
-    {:reply, result, state}
-  end
-
-  def handle_call({:accounts, user}, _from, state) do
-    result = Ig.User.accounts(Map.get(state.users, user, nil))
-    {:reply, result, state}
-  end
-
-  def handle_call({:account_preferences, nil}, _from, state) do
-    user =
-      state.users
-      |> Map.keys()
-      |> List.first()
-
-    result = Ig.User.account_preferences(Map.get(state.users, user, nil))
-    {:reply, result, state}
-  end
-
-  def handle_call({:account_preferences, user}, _from, state) do
-    result = Ig.User.account_preferences(Map.get(state.users, user, nil))
-    {:reply, result, state}
-  end
-
-  def handle_call({:activity_history, optional, nil}, _from, state) do
-    user =
-      state.users
-      |> Map.keys()
-      |> List.first()
-
-    result = Ig.User.activity_history(Map.get(state.users, user, nil), optional)
-    {:reply, result, state}
-  end
-
-  def handle_call({:activity_history, optional, user}, _from, state) do
-    result = Ig.User.activity_history(Map.get(state.users, user, nil), optional)
-    {:reply, result, state}
+  def handle_call({:get_user, user}, _from, state) do
+    {:reply, state.users[user], state}
   end
 
   ## Private functions

@@ -77,6 +77,18 @@ defmodule Ig.User do
     GenServer.call(pid, :account_preferences)
   end
 
+  @doc """
+  Returns the account activity history.
+
+  Optional params:
+  - from     (DateTime)	Start date
+  - to       (DateTime)	End date (Default = current time. A date without time component refers to the end of that day.)
+  - detailed (boolean) 	Indicates whether to retrieve additional details about the activity (default = false)
+  - dealId   (String) 	Deal ID
+  - filter   (String) 	FIQL filter (supported operators: ==|!=|,|;)
+  - pageSize (int) 	    Page size (min: 10, max: 500) (Default = 50)
+  """
+  @spec activity_history(pid(), keyword()) :: {:ok, %{}}
   def activity_history(pid, optional) do
     GenServer.call(pid, {:activity_history, optional})
   end
@@ -84,6 +96,8 @@ defmodule Ig.User do
   def get_state(pid) when is_pid(pid) do
     GenServer.call(pid, :get_state)
   end
+
+  ## Callbacks
 
   def handle_call(:get_state, _from, state) do
     {:reply, state, state}
