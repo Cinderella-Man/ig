@@ -124,7 +124,8 @@ defmodule IgTest do
       user_pid = Ig.get_user(:user_name, pid)
       {:ok, _} = Ig.User.login(user_pid)
 
-      {:ok, result} = Ig.User.activity_history(user_pid, [from: "2020-01-01T00:00:00", detailed: true])
+      {:ok, result} =
+        Ig.User.activity_history(user_pid, from: "2020-01-01T00:00:00", detailed: true)
 
       assert result.metadata.paging.next == nil
       assert result.metadata.paging.size == 4
