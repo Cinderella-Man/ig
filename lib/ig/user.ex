@@ -65,14 +65,32 @@ defmodule Ig.User do
     {:ok, State.new(account_details)}
   end
 
+  @doc """
+  Returns the user's session details.
+
+  Version: 1
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=534
+  """
   def login(pid) do
     GenServer.call(pid, :login)
   end
 
+  @doc """
+  Returns a list of accounts belonging to the logged-in client.
+
+  Version: 1
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=553
+  """
   def accounts(pid) do
     GenServer.call(pid, :accounts)
   end
 
+  @doc """
+  Returns account preferences.
+
+  Version: 1
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=531
+  """
   def account_preferences(pid) do
     GenServer.call(pid, :account_preferences)
   end
@@ -87,9 +105,12 @@ defmodule Ig.User do
   - dealId   (String) 	Deal ID
   - filter   (String) 	FIQL filter (supported operators: ==|!=|,|;)
   - pageSize (int) 	    Page size (min: 10, max: 500) (Default = 50)
+
+  Version: 1
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=543
   """
   @spec activity_history(pid(), [keyword()]) :: {:ok, %{}}
-  def activity_history(pid, [_|_] = optional_args) do
+  def activity_history(pid, [_ | _] = optional_args) do
     GenServer.call(pid, {:activity_history, optional_args})
   end
 
@@ -97,6 +118,9 @@ defmodule Ig.User do
   Returns the account activity history for the last specified period.
 
   last_period is an interval in milliseconds
+
+  Version: 1
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=549
   """
   @spec activity_history(pid(), integer()) :: {:ok, %{}}
   def activity_history(pid, last_period) when is_integer(last_period) do
@@ -107,11 +131,33 @@ defmodule Ig.User do
   Returns the account activity history for the given date range.
 
   Both from_date and to_date should be string in dd-mm-yyyy format
+
+  Version: 1
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=539
   """
   @spec activity_history(pid(), String.t(), String.t()) :: {:ok, %{}}
   def activity_history(pid, from_date, to_date) do
     # todo: check dd-mm-yyyy format here
     GenServer.call(pid, {:activity_history, from_date, to_date})
+  end
+
+  @doc """
+  Returns the transaction history. By default returns the minute prices within the last 10 minutes.
+
+  Optional params:
+  - type           (String)   Transaction type ALL | ALL_DEAL | DEPOSIT | WITHDRAWAL (default = ALL)
+  - from           (DateTime) Start date
+  - to             (DateTime) End date (date without time refers to the end of that day)
+  - maxSpanSeconds (int) 	    Limits the timespan in seconds through to current time (not applicable if a date range has been specified) (default = 600)
+  - pageSize       (int)      Page size (disable paging = 0) (default = 20)
+  -	pageNumber     (int)      Page number (default = 1)
+
+  Version: 2
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=525
+  """
+  @spec transactions(pid(), [keyword()]) :: {:ok, %{}}
+  def transactions(pid, [_ | _] = optional_args) do
+    GenServer.call(pid, {:transactions, optional_args})
   end
 
   def get_state(pid) when is_pid(pid) do
@@ -186,7 +232,7 @@ defmodule Ig.User do
   end
 
   def handle_call(
-        {:activity_history, [_|_] = optional_args},
+        {:activity_history, [_ | _] = optional_args},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
@@ -200,8 +246,9 @@ defmodule Ig.User do
         {"VERSION", 3}
       ])
 
-    result = body
-     |> decode_activities()
+    result =
+      body
+      |> decode_activities()
 
     {:reply, {:ok, result}, state}
   end
@@ -219,12 +266,15 @@ defmodule Ig.User do
         {"VERSION", 1}
       ])
 
-    %{"activities" => activities_list} = body
-     |> Jason.decode!()
+    %{"activities" => activities_list} =
+      body
+      |> Jason.decode!()
 
-    result = %{activities:
-     activities_list
-     |> Enum.map(&decode_activity/1)}
+    result = %{
+      activities:
+        activities_list
+        |> Enum.map(&decode_activity/1)
+    }
 
     {:reply, {:ok, result}, state}
   end
@@ -233,7 +283,8 @@ defmodule Ig.User do
         {:activity_history, last_period},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) when is_integer(last_period) do
+      )
+      when is_integer(last_period) do
     {:ok, %HTTPoison.Response{body: body}} =
       Ig.RestClient.get(demo, "/history/activity/#{last_period}", [
         {"X-IG-API-KEY", api_key},
@@ -242,12 +293,15 @@ defmodule Ig.User do
         {"VERSION", 1}
       ])
 
-    %{"activities" => activities_list} = body
-     |> Jason.decode!()
+    %{"activities" => activities_list} =
+      body
+      |> Jason.decode!()
 
-    result = %{activities:
-     activities_list
-     |> Enum.map(&decode_activity/1)}
+    result = %{
+      activities:
+        activities_list
+        |> Enum.map(&decode_activity/1)
+    }
 
     {:reply, {:ok, result}, state}
   end
@@ -277,10 +331,11 @@ defmodule Ig.User do
   defp decode_activity(activity) do
     activity_struct = Ig.HistoricalActivity.new(activity)
 
-    activity_details = case activity_struct.details do
-      nil     -> nil
-      details -> Ig.HistoricalActivityDetail.new(details)
-    end
+    activity_details =
+      case activity_struct.details do
+        nil -> nil
+        details -> Ig.HistoricalActivityDetail.new(details)
+      end
 
     %{activity_struct | details: activity_details}
   end

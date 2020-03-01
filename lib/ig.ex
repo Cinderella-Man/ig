@@ -51,7 +51,7 @@ defmodule Ig do
   ## Public interface
 
   def start(_type, _args) do
-    start_link([name: :IG])
+    start_link(name: :IG)
   end
 
   @spec start_link(any) :: GenServer.on_start()

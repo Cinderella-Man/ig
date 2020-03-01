@@ -124,7 +124,8 @@ defmodule IgTest do
       {:ok, user_pid} = Ig.get_user(:user_name, pid)
       {:ok, _} = Ig.User.login(user_pid)
 
-      {:ok, result} = Ig.User.activity_history(user_pid, [from: "2020-01-01T00:00:00", detailed: true])
+      {:ok, result} =
+        Ig.User.activity_history(user_pid, from: "2020-01-01T00:00:00", detailed: true)
 
       assert result.metadata.paging.next == nil
       assert result.metadata.paging.size == 4
@@ -266,51 +267,51 @@ defmodule IgTest do
       {:ok, result} = Ig.User.activity_history(user_pid, "01-01-2020", "19-02-2020")
 
       assert result.activities == [
-        %Ig.HistoricalActivity{
-          channel: "Mobile",
-          date: "18/02/20",
-          dealId: "DIAAAADC3TV43AN",
-          description: nil,
-          details: nil,
-          epic: "ED.D.TL0GY.DAILY.IP",
-          period: "DFB",
-          status: nil,
-          type: nil
-        },
-        %Ig.HistoricalActivity{
-          channel: "Mobile",
-          date: "18/02/20",
-          dealId: "DIAAAADC3U343AG",
-          description: nil,
-          details: nil,
-          epic: "EN.D.LCO.Month6.IP",
-          period: "APR-20",
-          status: nil,
-          type: nil
-        },
-        %Ig.HistoricalActivity{
-          channel: "System",
-          date: "29/01/20",
-          dealId: "DIAAAADBDRWS2A4",
-          description: nil,
-          details: nil,
-          epic: "EN.D.LCO.Month6.IP",
-          period: "APR-20",
-          status: nil,
-          type: nil
-        },
-        %Ig.HistoricalActivity{
-          channel: "System",
-          date: "29/01/20",
-          dealId: "DIAAAADBDRWSZA4",
-          description: nil,
-          details: nil,
-          epic: "EN.D.LCO.Month5.IP",
-          period: "MAR-20",
-          status: nil,
-          type: nil
-        }
-      ]
+               %Ig.HistoricalActivity{
+                 channel: "Mobile",
+                 date: "18/02/20",
+                 dealId: "DIAAAADC3TV43AN",
+                 description: nil,
+                 details: nil,
+                 epic: "ED.D.TL0GY.DAILY.IP",
+                 period: "DFB",
+                 status: nil,
+                 type: nil
+               },
+               %Ig.HistoricalActivity{
+                 channel: "Mobile",
+                 date: "18/02/20",
+                 dealId: "DIAAAADC3U343AG",
+                 description: nil,
+                 details: nil,
+                 epic: "EN.D.LCO.Month6.IP",
+                 period: "APR-20",
+                 status: nil,
+                 type: nil
+               },
+               %Ig.HistoricalActivity{
+                 channel: "System",
+                 date: "29/01/20",
+                 dealId: "DIAAAADBDRWS2A4",
+                 description: nil,
+                 details: nil,
+                 epic: "EN.D.LCO.Month6.IP",
+                 period: "APR-20",
+                 status: nil,
+                 type: nil
+               },
+               %Ig.HistoricalActivity{
+                 channel: "System",
+                 date: "29/01/20",
+                 dealId: "DIAAAADBDRWSZA4",
+                 description: nil,
+                 details: nil,
+                 epic: "EN.D.LCO.Month5.IP",
+                 period: "MAR-20",
+                 status: nil,
+                 type: nil
+               }
+             ]
     end
   end
 
@@ -323,51 +324,51 @@ defmodule IgTest do
       {:ok, result} = Ig.User.activity_history(user_pid, 5_000_000_000)
 
       assert result.activities == [
-        %Ig.HistoricalActivity{
-          channel: "Mobile",
-          date: "18/02/20",
-          dealId: "DIAAAADC3TV43AN",
-          description: nil,
-          details: nil,
-          epic: "ED.D.TL0GY.DAILY.IP",
-          period: "DFB",
-          status: nil,
-          type: nil
-        },
-        %Ig.HistoricalActivity{
-          channel: "Mobile",
-          date: "18/02/20",
-          dealId: "DIAAAADC3U343AG",
-          description: nil,
-          details: nil,
-          epic: "EN.D.LCO.Month6.IP",
-          period: "APR-20",
-          status: nil,
-          type: nil
-        },
-        %Ig.HistoricalActivity{
-          channel: "System",
-          date: "29/01/20",
-          dealId: "DIAAAADBDRWS2A4",
-          description: nil,
-          details: nil,
-          epic: "EN.D.LCO.Month6.IP",
-          period: "APR-20",
-          status: nil,
-          type: nil
-        },
-        %Ig.HistoricalActivity{
-          channel: "System",
-          date: "29/01/20",
-          dealId: "DIAAAADBDRWSZA4",
-          description: nil,
-          details: nil,
-          epic: "EN.D.LCO.Month5.IP",
-          period: "MAR-20",
-          status: nil,
-          type: nil
-        }
-      ]
+               %Ig.HistoricalActivity{
+                 channel: "Mobile",
+                 date: "18/02/20",
+                 dealId: "DIAAAADC3TV43AN",
+                 description: nil,
+                 details: nil,
+                 epic: "ED.D.TL0GY.DAILY.IP",
+                 period: "DFB",
+                 status: nil,
+                 type: nil
+               },
+               %Ig.HistoricalActivity{
+                 channel: "Mobile",
+                 date: "18/02/20",
+                 dealId: "DIAAAADC3U343AG",
+                 description: nil,
+                 details: nil,
+                 epic: "EN.D.LCO.Month6.IP",
+                 period: "APR-20",
+                 status: nil,
+                 type: nil
+               },
+               %Ig.HistoricalActivity{
+                 channel: "System",
+                 date: "29/01/20",
+                 dealId: "DIAAAADBDRWS2A4",
+                 description: nil,
+                 details: nil,
+                 epic: "EN.D.LCO.Month6.IP",
+                 period: "APR-20",
+                 status: nil,
+                 type: nil
+               },
+               %Ig.HistoricalActivity{
+                 channel: "System",
+                 date: "29/01/20",
+                 dealId: "DIAAAADBDRWSZA4",
+                 description: nil,
+                 details: nil,
+                 epic: "EN.D.LCO.Month5.IP",
+                 period: "MAR-20",
+                 status: nil,
+                 type: nil
+               }
+             ]
     end
   end
 end
