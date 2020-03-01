@@ -21,15 +21,17 @@ Wrapper for the [IG API](https://labs.ig.com/rest-trading-api-guide).
 * run `mix test` inside main directory - it should be green
 * run `iex -S mix` inside main directory and you should get the following results:
   ```
-    iex(1)> {:ok, pid} = Ig.start_link([])
+    iex(1)> {:ok, pid} = Ig.start_link()
     {:ok, #PID<0.1351.0>}
-    iex(2)> Ig.login(pid)
+    iex(2)> {:ok, user_pid} = Ig.get_user(:user_name, pid)
+    {:ok, #PID<0.1352.0>}
+    iex(3)> {:ok, %Ig.User.State{}} = Ig.User.login(user_pid)
     {:ok,
         %Ig.User.State{
         ...
         }
     }
-    iex(3)> Ig.accounts(pid)
+    iex(3)> {:ok, [%Ig.Account{}|_]} = Ig.User.accounts(user_pid)
     {:ok,
       [
         %Ig.Account{

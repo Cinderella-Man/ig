@@ -88,9 +88,30 @@ defmodule Ig.User do
   - filter   (String) 	FIQL filter (supported operators: ==|!=|,|;)
   - pageSize (int) 	    Page size (min: 10, max: 500) (Default = 50)
   """
-  @spec activity_history(pid(), keyword()) :: {:ok, %{}}
-  def activity_history(pid, optional) do
-    GenServer.call(pid, {:activity_history, optional})
+  @spec activity_history(pid(), [keyword()]) :: {:ok, %{}}
+  def activity_history(pid, [_|_] = optional_args) do
+    GenServer.call(pid, {:activity_history, optional_args})
+  end
+
+  @doc """
+  Returns the account activity history for the last specified period.
+
+  last_period is an interval in milliseconds
+  """
+  @spec activity_history(pid(), integer()) :: {:ok, %{}}
+  def activity_history(pid, last_period) when is_integer(last_period) do
+    GenServer.call(pid, {:activity_history, last_period})
+  end
+
+  @doc """
+  Returns the account activity history for the given date range.
+
+  Both from_date and to_date should be string in dd-mm-yyyy format
+  """
+  @spec activity_history(pid(), String.t(), String.t()) :: {:ok, %{}}
+  def activity_history(pid, from_date, to_date) do
+    # todo: check dd-mm-yyyy format here
+    GenServer.call(pid, {:activity_history, from_date, to_date})
   end
 
   def get_state(pid) when is_pid(pid) do
@@ -165,11 +186,11 @@ defmodule Ig.User do
   end
 
   def handle_call(
-        {:activity_history, optional},
+        {:activity_history, [_|_] = optional_args},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
-    params = URI.encode_query(optional)
+    params = URI.encode_query(optional_args)
 
     {:ok, %HTTPoison.Response{body: body}} =
       Ig.RestClient.get(demo, "/history/activity?#{params}", [
@@ -179,6 +200,59 @@ defmodule Ig.User do
         {"VERSION", 3}
       ])
 
+    result = body
+     |> decode_activities()
+
+    {:reply, {:ok, result}, state}
+  end
+
+  def handle_call(
+        {:activity_history, from_date, to_date},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/history/activity/#{from_date}/#{to_date}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 1}
+      ])
+
+    %{"activities" => activities_list} = body
+     |> Jason.decode!()
+
+    result = %{activities:
+     activities_list
+     |> Enum.map(&decode_activity/1)}
+
+    {:reply, {:ok, result}, state}
+  end
+
+  def handle_call(
+        {:activity_history, last_period},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) when is_integer(last_period) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/history/activity/#{last_period}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 1}
+      ])
+
+    %{"activities" => activities_list} = body
+     |> Jason.decode!()
+
+    result = %{activities:
+     activities_list
+     |> Enum.map(&decode_activity/1)}
+
+    {:reply, {:ok, result}, state}
+  end
+
+  defp decode_activities(body) do
     %{
       "activities" => activities_list,
       "metadata" => %{
@@ -189,16 +263,25 @@ defmodule Ig.User do
       }
     } = Jason.decode!(body)
 
-    result = %{
+    %{
       activities:
         activities_list
-        |> Enum.map(fn activity ->
-          activity_struct = Ig.HistoricalActivity.new(activity)
-          %{activity_struct | details: Ig.HistoricalActivityDetail.new(activity_struct.details)}
-        end),
+        |> Enum.map(&decode_activity/1),
       metadata: %{paging: %{next: paging_next, size: paging_size}}
     }
+  end
 
-    {:reply, {:ok, result}, state}
+  #####
+  # Note: Activities can have no `details`
+  #####
+  defp decode_activity(activity) do
+    activity_struct = Ig.HistoricalActivity.new(activity)
+
+    activity_details = case activity_struct.details do
+      nil     -> nil
+      details -> Ig.HistoricalActivityDetail.new(details)
+    end
+
+    %{activity_struct | details: activity_details}
   end
 end

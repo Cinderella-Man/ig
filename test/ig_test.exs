@@ -10,7 +10,7 @@ defmodule IgTest do
   test "login using default(first) user" do
     use_cassette "login_ok" do
       {:ok, pid} = Ig.start_link()
-      user_pid = Ig.get_user(:user_name, pid)
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
       {:ok, result} = Ig.User.login(user_pid)
       result = %{result | identifier: "***", password: "***", api_key: "***"}
 
@@ -60,7 +60,7 @@ defmodule IgTest do
   test "fetch accounts" do
     use_cassette "accounts" do
       {:ok, pid} = Ig.start_link()
-      user_pid = Ig.get_user(:user_name, pid)
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
       {:ok, _} = Ig.User.login(user_pid)
 
       assert Ig.User.accounts(user_pid) ==
@@ -107,7 +107,7 @@ defmodule IgTest do
   test "fetch account preferences" do
     use_cassette "account_preferences" do
       {:ok, pid} = Ig.start_link()
-      user_pid = Ig.get_user(:user_name, pid)
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
       {:ok, _} = Ig.User.login(user_pid)
 
       assert Ig.User.account_preferences(user_pid) ==
@@ -121,7 +121,7 @@ defmodule IgTest do
   test "fetch historical activities" do
     use_cassette "historical_activities" do
       {:ok, pid} = Ig.start_link()
-      user_pid = Ig.get_user(:user_name, pid)
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
       {:ok, _} = Ig.User.login(user_pid)
 
       {:ok, result} = Ig.User.activity_history(user_pid, [from: "2020-01-01T00:00:00", detailed: true])
@@ -254,6 +254,120 @@ defmodule IgTest do
                  type: "POSITION"
                }
              ]
+    end
+  end
+
+  test "fetch historical activities by date range" do
+    use_cassette "historical_activities_date_range" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      {:ok, result} = Ig.User.activity_history(user_pid, "01-01-2020", "19-02-2020")
+
+      assert result.activities == [
+        %Ig.HistoricalActivity{
+          channel: "Mobile",
+          date: "18/02/20",
+          dealId: "DIAAAADC3TV43AN",
+          description: nil,
+          details: nil,
+          epic: "ED.D.TL0GY.DAILY.IP",
+          period: "DFB",
+          status: nil,
+          type: nil
+        },
+        %Ig.HistoricalActivity{
+          channel: "Mobile",
+          date: "18/02/20",
+          dealId: "DIAAAADC3U343AG",
+          description: nil,
+          details: nil,
+          epic: "EN.D.LCO.Month6.IP",
+          period: "APR-20",
+          status: nil,
+          type: nil
+        },
+        %Ig.HistoricalActivity{
+          channel: "System",
+          date: "29/01/20",
+          dealId: "DIAAAADBDRWS2A4",
+          description: nil,
+          details: nil,
+          epic: "EN.D.LCO.Month6.IP",
+          period: "APR-20",
+          status: nil,
+          type: nil
+        },
+        %Ig.HistoricalActivity{
+          channel: "System",
+          date: "29/01/20",
+          dealId: "DIAAAADBDRWSZA4",
+          description: nil,
+          details: nil,
+          epic: "EN.D.LCO.Month5.IP",
+          period: "MAR-20",
+          status: nil,
+          type: nil
+        }
+      ]
+    end
+  end
+
+  test "fetch historical activities by last period" do
+    use_cassette "historical_activities_last_period" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      {:ok, result} = Ig.User.activity_history(user_pid, 5_000_000_000)
+
+      assert result.activities == [
+        %Ig.HistoricalActivity{
+          channel: "Mobile",
+          date: "18/02/20",
+          dealId: "DIAAAADC3TV43AN",
+          description: nil,
+          details: nil,
+          epic: "ED.D.TL0GY.DAILY.IP",
+          period: "DFB",
+          status: nil,
+          type: nil
+        },
+        %Ig.HistoricalActivity{
+          channel: "Mobile",
+          date: "18/02/20",
+          dealId: "DIAAAADC3U343AG",
+          description: nil,
+          details: nil,
+          epic: "EN.D.LCO.Month6.IP",
+          period: "APR-20",
+          status: nil,
+          type: nil
+        },
+        %Ig.HistoricalActivity{
+          channel: "System",
+          date: "29/01/20",
+          dealId: "DIAAAADBDRWS2A4",
+          description: nil,
+          details: nil,
+          epic: "EN.D.LCO.Month6.IP",
+          period: "APR-20",
+          status: nil,
+          type: nil
+        },
+        %Ig.HistoricalActivity{
+          channel: "System",
+          date: "29/01/20",
+          dealId: "DIAAAADBDRWSZA4",
+          description: nil,
+          details: nil,
+          epic: "EN.D.LCO.Month5.IP",
+          period: "MAR-20",
+          status: nil,
+          type: nil
+        }
+      ]
     end
   end
 end

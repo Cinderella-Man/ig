@@ -62,10 +62,8 @@ defmodule Ig do
   @spec init(any) :: {:ok, %State{}}
   def init(_) do
     users =
-      Enum.map(
-        Application.get_env(:ig, :users) || [],
-        &init_account/1
-      )
+      (Application.get_env(:ig, :users) || [])
+      |> Enum.map(&init_account/1)
       |> Enum.into(%{})
 
     {:ok,
@@ -86,11 +84,11 @@ defmodule Ig do
   ## Callbacks
 
   def handle_call(:get_users, _from, state) do
-    {:reply, state.users, state}
+    {:reply, {:ok, state.users}, state}
   end
 
   def handle_call({:get_user, user}, _from, state) do
-    {:reply, state.users[user], state}
+    {:reply, {:ok, state.users[user]}, state}
   end
 
   ## Private functions
