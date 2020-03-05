@@ -176,11 +176,11 @@ defmodule Ig.User do
     GenServer.call(pid, :markets)
   end
 
-  def markets(pid, epic) do
+  def markets(pid, [%{epic: epic}]) do
     GenServer.call(pid, {:markets, epic})
   end
   
-  def markets(pid, nil, search_term) do
+  def markets(pid, [%{search_term: search_term}]) do
     GenServer.call(pid, {:markets, nil, %{search_term: search_term}})
   end
 
@@ -427,7 +427,7 @@ defmodule Ig.User do
   end
 
   def handle_call(
-        {:markets, epic},
+        {:markets, [%{epic: epic}]},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
@@ -445,7 +445,7 @@ defmodule Ig.User do
   end
   
   def handle_call(
-        {:markets, nil, search_term},
+        {:markets, [%{search_term: search_term}]},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
