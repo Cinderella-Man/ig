@@ -179,9 +179,21 @@ defmodule Ig.User do
   def markets(pid, epic) do
     GenServer.call(pid, {:markets, epic})
   end
+  
+  def markets(pid, nil, search_term) do
+    GenServer.call(pid, {:markets, nil, %{search_term: search_term}})
+  end
 
   def prices(pid, epic) do
     GenServer.call(pid, {:prices, epic})
+  end
+
+  def prices(pid, epic, resolution, num_points) do
+    GenServer.call(pid, {:prices, epic, resolution, num_points})
+  end
+
+  def prices(pid, epic, resolution, start_date, end_date) do
+    GenServer.call(pid, {:prices, epic, resolution, start_date, end_date})
   end
 
   ## Callbacks
@@ -420,11 +432,29 @@ defmodule Ig.User do
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/markets/#{epic}}', [
+      Ig.RestClient.get(demo, '/markets/#{epic}', [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
         {"VERSION", 3}
+      ])
+
+    response_body = Jason.decode!(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+  
+  def handle_call(
+        {:markets, nil, search_term},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, '/markets?searchTerm=#{search_term}', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 2}
       ])
 
     response_body = Jason.decode!(body)
@@ -443,6 +473,42 @@ defmodule Ig.User do
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
         {"VERSION", 3}
+      ])
+
+    response_body = Jason.decode!(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epic, resolution, num_points},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, '/prices/#{epic}/#{resolution}/#{num_points}', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 2}
+      ])
+
+    response_body = Jason.decode!(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epic, resolution, start_date, end_date},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, '/prices/#{epic}/#{resolution}/#{start_date}/#{end_date}', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 2}
       ])
 
     response_body = Jason.decode!(body)
