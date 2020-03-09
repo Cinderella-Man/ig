@@ -197,7 +197,7 @@ defmodule Ig.User do
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=547
   """
   def markets(pid, search_term: search_term) do
-    GenServer.call(pid, {:markets, search_term})
+    GenServer.call(pid, {:markets, [search_term: search_term]})
   end
 
   @doc """
@@ -217,7 +217,7 @@ defmodule Ig.User do
   Returns the details of the given markets.
 
   Require params:
-  - epic  (String)  The epic of the market to be retrieved
+  - epics  (String)  The epic of the market to be retrieved
 
   Optional params:
   (Default = ALL)
@@ -234,8 +234,8 @@ defmodule Ig.User do
   Version: 2
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=524
   """
-  def markets(pid, epic, [_ | _] = optional_args) do
-    GenServer.call(pid, {:markets, epic, optional_args})
+  def markets(pid, epics, [_ | _] = optional_args) do
+    GenServer.call(pid, {:markets, epics, optional_args})
   end
 
   @doc """
@@ -271,8 +271,8 @@ defmodule Ig.User do
   Version: 3
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=521
   """
-  def prices(pid, epic, [] = optional_args) do
-    GenServer.call(pid, {:prices, epic, optional_args})
+  def prices(pid, epics, [_ | _] = optional_args) do
+    GenServer.call(pid, {:prices, epics, optional_args})
   end
 
   @doc """
@@ -521,14 +521,14 @@ defmodule Ig.User do
   end
 
   def handle_call(
-        {:markets, epic, [_ | _] = optional_args},
+        {:markets, epics, [_ | _] = optional_args},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     params = URI.encode_query(optional_args)
 
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/markets/#{epic}?#{params}', [
+      Ig.RestClient.get(demo, '/markets/#{epics}?#{params}', [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
@@ -559,14 +559,14 @@ defmodule Ig.User do
   end
 
   def handle_call(
-        {:prices, epic, [_ | _] = optional_args},
+        {:prices, epics, [_ | _] = optional_args},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     params = URI.encode_query(optional_args)
 
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/prices/#{epic}?#{params}}', [
+      Ig.RestClient.get(demo, '/prices/#{epics}?#{params}}', [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},

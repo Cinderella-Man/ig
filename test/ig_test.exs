@@ -371,4 +371,16 @@ defmodule IgTest do
              ]
     end
   end
+
+  test "returns all top-level nodes in the market navigation hierarchy." do
+    use_cassette "market_navigation" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      {:ok, result} = Ig.User.market_navigation(user_pid)
+
+      assert %{"markets" => _, "nodes" => [_ | _]} = result
+    end
+  end
 end
