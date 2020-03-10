@@ -383,4 +383,59 @@ defmodule IgTest do
       assert %{"markets" => _, "nodes" => [_ | _]} = result
     end
   end
+
+  test "market navigation with node_id" do
+    use_cassette "market_navigation_node_id" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      node_id = "eur-usd"
+      {:ok, result} = Ig.User.market_navigation(user_pid, node_id)
+
+      assert %{"markets" => _, "nodes" => nil} = result
+    end
+  end
+
+  test "markets" do
+    use_cassette "markets" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      epics = "ED.D.TL0GY.DAILY.IP"
+      {:ok, result} = Ig.User.markets(user_pid, epics)
+      
+      assert %{"instrument" => _, "dealingRules" => _, "snapshot" => _} = result
+    end
+  end
+
+  test "prices" do
+    use_cassette "prices" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      epics = "ED.D.TL0GY.DAILY.IP"
+      {:ok, result} = Ig.User.prices(user_pid, epics)
+      
+      assert %{"instrumentType" => _, "metadata" => _, "prices" => [_|_]} = result
+    end
+  end
+
+#  test "prices with resolution, start_date and end_date" do
+#    use_cassette "prices_resolution_start_date_end_date" do
+#      {:ok, pid} = Ig.start_link()
+#      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+#      {:ok, _} = Ig.User.login(user_pid)
+#
+#      epics = "ED.D.TL0GY.DAILY.IP"
+#      resolution = "MINUTE"
+#      start_date = "2020-01-01T00:00:00"
+#      end_date = "2020-01-02T00:00:00"
+#      {:ok, result} = Ig.User.prices(pid, epics, resolution, start_date, end_date)
+#
+#      assert %{"instrumentType" => _, "metadata" => _, "prices" => [_|_]} = result
+#    end
+#  end
 end

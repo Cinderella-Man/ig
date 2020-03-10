@@ -197,7 +197,7 @@ defmodule Ig.User do
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=547
   """
   def markets(pid, search_term: search_term) do
-    GenServer.call(pid, {:markets, [search_term: search_term]})
+    GenServer.call(pid, {:markets, search_term: search_term})
   end
 
   @doc """
@@ -209,8 +209,8 @@ defmodule Ig.User do
   Version: 3
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=528
   """
-  def markets(pid, epic) do
-    GenServer.call(pid, {:markets, epic})
+  def markets(pid, epics) do
+    GenServer.call(pid, {:markets, epics})
   end
 
   @doc """
@@ -271,8 +271,8 @@ defmodule Ig.User do
   Version: 3
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=521
   """
-  def prices(pid, epics, [_ | _] = optional_args) do
-    GenServer.call(pid, {:prices, epics, optional_args})
+  def prices(pid, epics) do
+    GenServer.call(pid, {:prices, epics})
   end
 
   @doc """
@@ -287,8 +287,8 @@ defmodule Ig.User do
   Version: 2
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=552
   """
-  def prices(pid, epic, resolution, num_points) do
-    GenServer.call(pid, {:prices, epic, resolution, num_points})
+  def prices(pid, epics, resolution, num_points) do
+    GenServer.call(pid, {:prices, epics, resolution, num_points})
   end
 
   @doc """
@@ -304,8 +304,8 @@ defmodule Ig.User do
   Version: 2
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=530
   """
-  def prices(pid, epic, resolution, start_date, end_date) do
-    GenServer.call(pid, {:prices, epic, resolution, start_date, end_date})
+  def prices(pid, epics, resolution, start_date, end_date) do
+    GenServer.call(pid, {:prices, epics, resolution, start_date, end_date})
   end
 
   ## Callbacks
@@ -490,7 +490,7 @@ defmodule Ig.User do
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/marketnavigation', [
+      Ig.RestClient.get(demo, "/marketnavigation", [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
@@ -508,7 +508,7 @@ defmodule Ig.User do
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/marketnavigation/#{node_id}}', [
+      Ig.RestClient.get(demo, "/marketnavigation/#{node_id}", [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
@@ -521,6 +521,24 @@ defmodule Ig.User do
   end
 
   def handle_call(
+        {:markets, epics},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/markets/#{epics}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = Jason.decode!(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+  
+  def handle_call(
         {:markets, epics, [_ | _] = optional_args},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
@@ -528,7 +546,7 @@ defmodule Ig.User do
     params = URI.encode_query(optional_args)
 
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/markets/#{epics}?#{params}', [
+      Ig.RestClient.get(demo, "/markets/#{epics}?#{params}", [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
@@ -546,7 +564,7 @@ defmodule Ig.User do
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/markets?searchTerm=#{search_term}', [
+      Ig.RestClient.get(demo, "/markets?searchTerm=#{search_term}", [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
@@ -559,6 +577,24 @@ defmodule Ig.User do
   end
 
   def handle_call(
+        {:prices, epics},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/prices/#{epics}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = Jason.decode!(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+  
+  def handle_call(
         {:prices, epics, [_ | _] = optional_args},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
@@ -566,7 +602,7 @@ defmodule Ig.User do
     params = URI.encode_query(optional_args)
 
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/prices/#{epics}?#{params}}', [
+      Ig.RestClient.get(demo, '/prices/#{epics}?#{params}', [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
@@ -597,12 +633,12 @@ defmodule Ig.User do
   end
 
   def handle_call(
-        {:prices, epic, resolution, start_date, end_date},
+        {:prices, epics, resolution, start_date, end_date},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/prices/#{epic}/#{resolution}/#{start_date}/#{end_date}', [
+      Ig.RestClient.get(demo, "/prices/#{epics}/#{resolution}/#{start_date}/#{end_date}", [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
