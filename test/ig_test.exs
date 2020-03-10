@@ -371,4 +371,98 @@ defmodule IgTest do
              ]
     end
   end
+
+  test "fetch historical transactions by date range" do
+    use_cassette "historical_transactions_date_range" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      {:ok, result} =
+        Ig.User.transactions(user_pid, from: "2019-10-01T00:00:00", to: "2020-03-01T00:00:00")
+
+      assert result.metadata == %{
+               page_data: %{page_number: 1, page_size: 20, total_pages: 1},
+               size: 5
+             }
+
+      assert result.transactions == [
+               %Ig.Transaction{
+                 cashTransaction: false,
+                 closeLevel: "5643",
+                 currency: "£",
+                 date: "2020-02-18",
+                 dateUtc: "2020-02-18T14:26:12",
+                 instrumentName: "Oil - Brent Crude",
+                 openDateUtc: "2020-01-29T20:14:54",
+                 openLevel: "5888",
+                 period: "APR-20",
+                 profitAndLoss: "£2,450.00",
+                 reference: "DIAAAADBDRWS2A4",
+                 size: "-10",
+                 transactionType: "DEAL"
+               },
+               %Ig.Transaction{
+                 cashTransaction: false,
+                 closeLevel: "5984",
+                 currency: "£",
+                 date: "2020-01-29",
+                 dateUtc: "2020-01-29T20:14:54",
+                 instrumentName: "Oil - Brent Crude",
+                 openDateUtc: "2019-12-26T20:10:56",
+                 openLevel: "6673",
+                 period: "MAR-20",
+                 profitAndLoss: "£6,890.00",
+                 reference: "DIAAAAC8UC2QXAU",
+                 size: "-10",
+                 transactionType: "DEAL"
+               },
+               %Ig.Transaction{
+                 cashTransaction: false,
+                 closeLevel: "6795",
+                 currency: "£",
+                 date: "2019-12-26",
+                 dateUtc: "2019-12-26T20:10:56",
+                 instrumentName: "Oil - Brent Crude",
+                 openDateUtc: "2019-12-20T21:39:29",
+                 openLevel: "6598",
+                 period: "FEB-20",
+                 profitAndLoss: "£-1,970.00",
+                 reference: "DIAAAAC8HJHAGAQ",
+                 size: "-10",
+                 transactionType: "DEAL"
+               },
+               %Ig.Transaction{
+                 cashTransaction: false,
+                 closeLevel: "6561.5",
+                 currency: "£",
+                 date: "2019-12-17",
+                 dateUtc: "2019-12-17T17:57:24",
+                 instrumentName: "Oil - Brent Crude",
+                 openDateUtc: "2019-12-17T17:17:56",
+                 openLevel: "6541.5",
+                 period: "DFB",
+                 profitAndLoss: "£-300.00",
+                 reference: "DIAAAAC74XU5BA8",
+                 size: "-15",
+                 transactionType: "DEAL"
+               },
+               %Ig.Transaction{
+                 cashTransaction: false,
+                 closeLevel: "0",
+                 currency: "£",
+                 date: "2019-12-17",
+                 dateUtc: "2019-12-17T17:57:24",
+                 instrumentName: "Oil - Brent Crude CRPREM DIAAAAC74XMARAR",
+                 openDateUtc: "2019-12-17T17:57:24",
+                 openLevel: "-",
+                 period: "DFB",
+                 profitAndLoss: "£-90.00",
+                 reference: "CS2609523091576605444806232231432221",
+                 size: "-",
+                 transactionType: "WITH"
+               }
+             ]
+    end
+  end
 end

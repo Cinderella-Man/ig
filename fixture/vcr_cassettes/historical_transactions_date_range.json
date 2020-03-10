@@ -1,0 +1,84 @@
+[
+  {
+    "request": {
+      "body": "{\"identifier\":\"***\",\"password\":\"***\"}",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "VERSION": "2"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/session"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":16980.0,\"deposit\":0.0,\"profitLoss\":0.0,\"available\":16980.0},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "Cache-Control": "no-cache, no-store",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json;charset=UTF-8",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Tue, 10 Mar 2020 23:00:50 GMT",
+        "Content-Length": "623",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "VERSION": "2"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/history/transactions?from=2019-10-01T00%3A00%3A00&to=2020-03-01T00%3A00%3A00"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"transactions\":[{\"date\":\"2020-02-18\",\"dateUtc\":\"2020-02-18T14:26:12\",\"openDateUtc\":\"2020-01-29T20:14:54\",\"instrumentName\":\"Oil - Brent Crude\",\"period\":\"APR-20\",\"profitAndLoss\":\"£2,450.00\",\"transactionType\":\"DEAL\",\"reference\":\"DIAAAADBDRWS2A4\",\"openLevel\":\"5888\",\"closeLevel\":\"5643\",\"size\":\"-10\",\"currency\":\"£\",\"cashTransaction\":false},{\"date\":\"2020-01-29\",\"dateUtc\":\"2020-01-29T20:14:54\",\"openDateUtc\":\"2019-12-26T20:10:56\",\"instrumentName\":\"Oil - Brent Crude\",\"period\":\"MAR-20\",\"profitAndLoss\":\"£6,890.00\",\"transactionType\":\"DEAL\",\"reference\":\"DIAAAAC8UC2QXAU\",\"openLevel\":\"6673\",\"closeLevel\":\"5984\",\"size\":\"-10\",\"currency\":\"£\",\"cashTransaction\":false},{\"date\":\"2019-12-26\",\"dateUtc\":\"2019-12-26T20:10:56\",\"openDateUtc\":\"2019-12-20T21:39:29\",\"instrumentName\":\"Oil - Brent Crude\",\"period\":\"FEB-20\",\"profitAndLoss\":\"£-1,970.00\",\"transactionType\":\"DEAL\",\"reference\":\"DIAAAAC8HJHAGAQ\",\"openLevel\":\"6598\",\"closeLevel\":\"6795\",\"size\":\"-10\",\"currency\":\"£\",\"cashTransaction\":false},{\"date\":\"2019-12-17\",\"dateUtc\":\"2019-12-17T17:57:24\",\"openDateUtc\":\"2019-12-17T17:17:56\",\"instrumentName\":\"Oil - Brent Crude\",\"period\":\"DFB\",\"profitAndLoss\":\"£-300.00\",\"transactionType\":\"DEAL\",\"reference\":\"DIAAAAC74XU5BA8\",\"openLevel\":\"6541.5\",\"closeLevel\":\"6561.5\",\"size\":\"-15\",\"currency\":\"£\",\"cashTransaction\":false},{\"date\":\"2019-12-17\",\"dateUtc\":\"2019-12-17T17:57:24\",\"openDateUtc\":\"2019-12-17T17:57:24\",\"instrumentName\":\"Oil - Brent Crude CRPREM DIAAAAC74XMARAR\",\"period\":\"DFB\",\"profitAndLoss\":\"£-90.00\",\"transactionType\":\"WITH\",\"reference\":\"CS2609523091576605444806232231432221\",\"openLevel\":\"-\",\"closeLevel\":\"0\",\"size\":\"-\",\"currency\":\"£\",\"cashTransaction\":false}],\"metadata\":{\"size\":5,\"pageData\":{\"pageSize\":20,\"pageNumber\":1,\"totalPages\":1}}}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Tue, 10 Mar 2020 23:00:50 GMT",
+        "Content-Length": "1734",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

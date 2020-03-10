@@ -306,6 +306,28 @@ defmodule Ig.User do
     {:reply, {:ok, result}, state}
   end
 
+  def handle_call(
+        {:transactions, [_ | _] = optional_args},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    params = URI.encode_query(optional_args)
+
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/history/transactions?#{params}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 2}
+      ])
+
+    result =
+      body
+      |> decode_transactions()
+
+    {:reply, {:ok, result}, state}
+  end
+
   defp decode_activities(body) do
     %{
       "activities" => activities_list,
@@ -322,6 +344,30 @@ defmodule Ig.User do
         activities_list
         |> Enum.map(&decode_activity/1),
       metadata: %{paging: %{next: paging_next, size: paging_size}}
+    }
+  end
+
+  defp decode_transactions(body) do
+    %{
+      "transactions" => transactions_list,
+      "metadata" => %{
+        "pageData" => %{
+          "pageNumber" => page_number,
+          "pageSize" => page_size,
+          "totalPages" => total_pages
+        },
+        "size" => size
+      }
+    } = Jason.decode!(body)
+
+    %{
+      transactions:
+        transactions_list
+        |> Enum.map(fn t -> Ig.Transaction.new(t) end),
+      metadata: %{
+        page_data: %{page_number: page_number, page_size: page_size, total_pages: total_pages},
+        size: size
+      }
     }
   end
 
