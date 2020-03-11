@@ -465,4 +465,181 @@ defmodule IgTest do
              ]
     end
   end
+
+  test "fetch currently active positions" do
+    use_cassette "active_positions" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      {:ok, result} = Ig.User.positions(user_pid)
+
+      assert result.positions == [
+               %{
+                 market: %Ig.Market{
+                   bid: 3396.7,
+                   delayTime: 0,
+                   epic: "CC.D.CL.USS.IP",
+                   expiry: "DFB",
+                   high: 3528.2,
+                   instrumentName: "Oil - US Crude",
+                   instrumentType: "COMMODITIES",
+                   lotSize: 1.0,
+                   low: 3381.7,
+                   marketStatus: "TRADEABLE",
+                   netChange: -52.5,
+                   offer: 3399.5,
+                   percentageChange: -1.52,
+                   scalingFactor: 1,
+                   streamingPricesAvailable: true,
+                   updateTime: "23:52:57",
+                   updateTimeUTC: "23:52:57"
+                 },
+                 position: %Ig.Position{
+                   contractSize: 1.0,
+                   controlledRisk: true,
+                   createdDate: "2020/03/10 23:33:48:000",
+                   createdDateUTC: "2020-03-10T23:33:48",
+                   currency: "GBP",
+                   dealId: "DIAAAADE7N52VAP",
+                   dealReference: "7RVM7N1E33CCPY1K",
+                   direction: "SELL",
+                   level: 3417.7,
+                   limitLevel: nil,
+                   limitedRiskPremium: 6.0,
+                   size: 1.0,
+                   stopLevel: 3447.7,
+                   trailingStep: nil,
+                   trailingStopDistance: nil
+                 }
+               },
+               %{
+                 market: %Ig.Market{
+                   bid: 8765.9,
+                   delayTime: 0,
+                   epic: "CS.D.EURGBP.TODAY.IP",
+                   expiry: "DFB",
+                   high: 8774.5,
+                   instrumentName: "EUR/GBP",
+                   instrumentType: "CURRENCIES",
+                   lotSize: 1.0,
+                   low: 8730.3,
+                   marketStatus: "TRADEABLE",
+                   netChange: 27.0,
+                   offer: 8767.9,
+                   percentageChange: 0.31,
+                   scalingFactor: 1,
+                   streamingPricesAvailable: true,
+                   updateTime: "23:52:56",
+                   updateTimeUTC: "23:52:56"
+                 },
+                 position: %Ig.Position{
+                   contractSize: 1.0,
+                   controlledRisk: false,
+                   createdDate: "2020/03/10 23:35:10:000",
+                   createdDateUTC: "2020-03-10T23:35:10",
+                   currency: "GBP",
+                   dealId: "DIAAAADE7PDYNAT",
+                   dealReference: "7RVM7N1E33CSPHRN",
+                   direction: "BUY",
+                   level: 8759.9,
+                   limitLevel: 8780.9,
+                   limitedRiskPremium: nil,
+                   size: 1.0,
+                   stopLevel: 8749.9,
+                   trailingStep: nil,
+                   trailingStopDistance: nil
+                 }
+               },
+               %{
+                 market: %Ig.Market{
+                   bid: 10490.8,
+                   delayTime: 0,
+                   epic: "CS.D.USDJPY.TODAY.IP",
+                   expiry: "DFB",
+                   high: 10567.7,
+                   instrumentName: "USD/JPY",
+                   instrumentType: "CURRENCIES",
+                   lotSize: 1.0,
+                   low: 10480.9,
+                   marketStatus: "TRADEABLE",
+                   netChange: -72.4,
+                   offer: 10492.6,
+                   percentageChange: -0.69,
+                   scalingFactor: 1,
+                   streamingPricesAvailable: true,
+                   updateTime: "23:52:57",
+                   updateTimeUTC: "23:52:57"
+                 },
+                 position: %Ig.Position{
+                   contractSize: 1.0,
+                   controlledRisk: false,
+                   createdDate: "2020/03/10 23:52:43:000",
+                   createdDateUTC: "2020-03-10T23:52:43",
+                   currency: "GBP",
+                   dealId: "DIAAAADE7NYX6AV",
+                   dealReference: "7RVM7N1E33DTCXXZ",
+                   direction: "BUY",
+                   level: 10491.8,
+                   limitLevel: nil,
+                   limitedRiskPremium: nil,
+                   size: 2.5,
+                   stopLevel: nil,
+                   trailingStep: nil,
+                   trailingStopDistance: nil
+                 }
+               }
+             ]
+    end
+  end
+
+  test "fetch position by deal id" do
+    use_cassette "active_position_by_deal_id" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      {:ok, result} = Ig.User.position(user_pid, "DIAAAADE7PDYNAT")
+
+      assert result ==
+               %{
+                 market: %Ig.Market{
+                   bid: 8765.1,
+                   delayTime: 0,
+                   epic: "CS.D.EURGBP.TODAY.IP",
+                   expiry: "DFB",
+                   high: 8774.5,
+                   instrumentName: "EUR/GBP",
+                   instrumentType: "CURRENCIES",
+                   lotSize: 1.0,
+                   low: 8730.3,
+                   marketStatus: "TRADEABLE",
+                   netChange: 26.2,
+                   offer: 8767.1,
+                   percentageChange: 0.3,
+                   scalingFactor: 1,
+                   streamingPricesAvailable: true,
+                   updateTime: "00:09:05",
+                   updateTimeUTC: "00:09:05"
+                 },
+                 position: %Ig.Position{
+                   contractSize: 1.0,
+                   controlledRisk: false,
+                   createdDate: "2020/03/10 23:35:10:000",
+                   createdDateUTC: "2020-03-10T23:35:10",
+                   currency: "GBP",
+                   dealId: "DIAAAADE7PDYNAT",
+                   dealReference: "7RVM7N1E33CSPHRN",
+                   direction: "BUY",
+                   level: 8759.9,
+                   limitLevel: 8780.9,
+                   limitedRiskPremium: nil,
+                   size: 1.0,
+                   stopLevel: 8749.9,
+                   trailingStep: nil,
+                   trailingStopDistance: nil
+                 }
+               }
+    end
+  end
 end

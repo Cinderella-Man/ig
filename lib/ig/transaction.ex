@@ -1,6 +1,6 @@
 defmodule Ig.Transaction do
   @moduledoc """
-  Struct for representing a single account returned by /history/transactions
+  Struct for representing a transactions returned by /history/transactions
   ```
   defstruct [
     :cashTransaction,
