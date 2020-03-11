@@ -423,6 +423,22 @@ defmodule IgTest do
     end
   end
 
+  test "prices with resolution, numPoints" do
+    use_cassette "prices_resolution_num_points" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      epics = "ED.D.TL0GY.DAILY.IP"
+      resolution = "MINUTE"
+      num_points = 10
+
+      {:ok, result} = Ig.User.prices(user_pid, epics, resolution, num_points)
+
+      assert %{"instrumentType" => _, "allowance" => _, "prices" => _} = result
+    end
+  end
+
   test "prices with resolution, start_date and end_date" do
     use_cassette "prices_resolution_start_date_end_date" do
       {:ok, pid} = Ig.start_link()
@@ -434,7 +450,7 @@ defmodule IgTest do
       start_date = "2020-01-01 00:00:00"
       end_date = "2020-01-02 00:00:00"
       {:ok, result} = Ig.User.prices(user_pid, epics, resolution, start_date, end_date)
-      
+
       assert %{"instrumentType" => _, "allowance" => _, "prices" => _} = result
     end
   end
