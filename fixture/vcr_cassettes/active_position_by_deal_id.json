@@ -1,0 +1,84 @@
+[
+  {
+    "request": {
+      "body": "{\"identifier\":\"***\",\"password\":\"***\"}",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "VERSION": "2"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/session"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":16924.0,\"deposit\":1166.94,\"profitLoss\":51.15,\"available\":15808.21},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "Cache-Control": "no-cache, no-store",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json;charset=UTF-8",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Wed, 11 Mar 2020 00:09:05 GMT",
+        "Content-Length": "630",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "VERSION": "2"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/positions/DIAAAADE7PDYNAT"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"position\":{\"contractSize\":1.0,\"createdDate\":\"2020/03/10 23:35:10:000\",\"createdDateUTC\":\"2020-03-10T23:35:10\",\"dealId\":\"DIAAAADE7PDYNAT\",\"dealReference\":\"7RVM7N1E33CSPHRN\",\"size\":1.0,\"direction\":\"BUY\",\"limitLevel\":8780.9,\"level\":8759.9,\"currency\":\"GBP\",\"controlledRisk\":false,\"stopLevel\":8749.9,\"trailingStep\":null,\"trailingStopDistance\":null,\"limitedRiskPremium\":null},\"market\":{\"instrumentName\":\"EUR/GBP\",\"expiry\":\"DFB\",\"epic\":\"CS.D.EURGBP.TODAY.IP\",\"instrumentType\":\"CURRENCIES\",\"lotSize\":1.0,\"high\":8774.5,\"low\":8730.3,\"percentageChange\":0.3,\"netChange\":26.2,\"bid\":8765.1,\"offer\":8767.1,\"updateTime\":\"00:09:05\",\"updateTimeUTC\":\"00:09:05\",\"delayTime\":0,\"streamingPricesAvailable\":true,\"marketStatus\":\"TRADEABLE\",\"scalingFactor\":1}}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Wed, 11 Mar 2020 00:09:05 GMT",
+        "Content-Length": "735",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

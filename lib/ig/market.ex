@@ -1,4 +1,7 @@
 defmodule Ig.Market do
+  @moduledoc """
+  Struct for representing a market part of positions returned by /positions
+  ```
   defstruct [
     :bid,
     :delayTime,
@@ -12,7 +15,27 @@ defmodule Ig.Market do
     :marketStatus,
     :netChange,
     :offer,
-    :otcTradeable,
+    :percentageChange,
+    :scalingFactor,
+    :streamingPricesAvailable,
+    :updateTime,
+    :updateTimeUTC
+  ]
+  ```
+  """
+  defstruct [
+    :bid,
+    :delayTime,
+    :epic,
+    :expiry,
+    :high,
+    :instrumentName,
+    :instrumentType,
+    :lotSize,
+    :low,
+    :marketStatus,
+    :netChange,
+    :offer,
     :percentageChange,
     :scalingFactor,
     :streamingPricesAvailable,
