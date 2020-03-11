@@ -1,0 +1,84 @@
+[
+  {
+    "request": {
+      "body": "{\"identifier\":\"***\",\"password\":\"***\"}",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "VERSION": "2"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/session"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":16945.0,\"deposit\":869.0,\"profitLoss\":-139.75,\"available\":15936.25},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "Cache-Control": "no-cache, no-store",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json;charset=UTF-8",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Wed, 11 Mar 2020 21:12:13 GMT",
+        "Content-Length": "630",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "VERSION": "2"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/prices/ED.D.TL0GY.DAILY.IP/MINUTE/2020-01-01 00:00:00/2020-01-02 00:00:00"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"prices\":[],\"instrumentType\":\"SHARES\",\"allowance\":{\"remainingAllowance\":9990,\"totalAllowance\":10000,\"allowanceExpiry\":524815}}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Wed, 11 Mar 2020 21:12:13 GMT",
+        "Content-Length": "127",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

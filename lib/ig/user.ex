@@ -537,7 +537,7 @@ defmodule Ig.User do
 
     {:reply, {:ok, response_body}, state}
   end
-  
+
   def handle_call(
         {:markets, epics, [_ | _] = optional_args},
         _from,
@@ -593,7 +593,7 @@ defmodule Ig.User do
 
     {:reply, {:ok, response_body}, state}
   end
-  
+
   def handle_call(
         {:prices, epics, [_ | _] = optional_args},
         _from,
