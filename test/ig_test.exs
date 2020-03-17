@@ -687,7 +687,7 @@ defmodule IgTest do
       epics = "ED.D.TL0GY.DAILY.IP"
       {:ok, result} = Ig.User.prices(user_pid, epics)
 
-      assert %{"instrumentType" => _, "metadata" => _, "prices" => [_ | _]} = result
+      assert %{instrument_type: _, metadata: _, prices: [_ | _]} = result
     end
   end
 
@@ -703,7 +703,7 @@ defmodule IgTest do
 
       {:ok, result} = Ig.User.prices(user_pid, epics, resolution, num_points)
 
-      assert %{"instrumentType" => _, "allowance" => _, "prices" => _} = result
+      assert %{instrument_type: _, prices: [_ | _]} = result
     end
   end
 
@@ -719,7 +719,7 @@ defmodule IgTest do
       end_date = "2020-01-02 00:00:00"
       {:ok, result} = Ig.User.prices(user_pid, epics, resolution, start_date, end_date)
 
-      assert %{"instrumentType" => _, "allowance" => _, "prices" => _} = result
+      assert %{instrument_type: _, prices: _} = result
     end
   end
 end

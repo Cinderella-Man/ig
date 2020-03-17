@@ -15,7 +15,7 @@
     },
     "response": {
       "binary": false,
-      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":16980.0,\"deposit\":0.0,\"profitLoss\":0.0,\"available\":16980.0},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
+      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":16945.0,\"deposit\":871.64,\"profitLoss\":-55.5,\"available\":16017.86},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
       "headers": {
         "Server": "HAProxy",
         "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
@@ -32,8 +32,8 @@
         "Expires": "0",
         "Content-Type": "application/json;charset=UTF-8",
         "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
-        "Date": "Tue, 10 Mar 2020 22:53:41 GMT",
-        "Content-Length": "623",
+        "Date": "Wed, 11 Mar 2020 23:18:36 GMT",
+        "Content-Length": "629",
         "Connection": "keep-alive"
       },
       "status_code": 200,
@@ -73,7 +73,7 @@
         "Expires": "0",
         "Content-Type": "application/json",
         "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
-        "Date": "Tue, 10 Mar 2020 22:53:42 GMT",
+        "Date": "Wed, 11 Mar 2020 23:18:36 GMT",
         "Content-Length": "2254",
         "Connection": "keep-alive"
       },

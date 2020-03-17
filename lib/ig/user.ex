@@ -210,19 +210,6 @@ defmodule Ig.User do
   end
 
   @doc """
-  Returns all markets matching the search term.
-
-  Optional params:
-  - searchTerm  (String)  The term to be used in the search
-
-  Version: 1
-  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=547
-  """
-  def markets(pid, search_term: search_term) do
-    GenServer.call(pid, {:markets, search_term: search_term})
-  end
-
-  @doc """
   Returns the details of the given market.
 
   Require params:
@@ -231,8 +218,8 @@ defmodule Ig.User do
   Version: 3
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=528
   """
-  def markets(pid, epics) do
-    GenServer.call(pid, {:markets, epics})
+  def markets(pid, epic) do
+    GenServer.call(pid, {:markets, epic})
   end
 
   @doc """
@@ -256,8 +243,8 @@ defmodule Ig.User do
   Version: 2
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=524
   """
-  def markets(pid, epics, [_ | _] = optional_args) do
-    GenServer.call(pid, {:markets, epics, optional_args})
+  def markets(pid, epics, filter \\ "ALL") do
+    GenServer.call(pid, {:markets, epics, filter: filter})
   end
 
   @doc """
@@ -293,8 +280,8 @@ defmodule Ig.User do
   Version: 3
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=521
   """
-  def prices(pid, epics) do
-    GenServer.call(pid, {:prices, epics})
+  def prices(pid, epic) do
+    GenServer.call(pid, {:prices, epic})
   end
 
   @doc """
@@ -309,8 +296,8 @@ defmodule Ig.User do
   Version: 2
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=552
   """
-  def prices(pid, epics, resolution, num_points) do
-    GenServer.call(pid, {:prices, epics, resolution, num_points})
+  def prices(pid, epic, resolution, num_points) do
+    GenServer.call(pid, {:prices, epic, resolution, num_points})
   end
 
   @doc """
@@ -326,8 +313,8 @@ defmodule Ig.User do
   Version: 2
   API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=530
   """
-  def prices(pid, epics, resolution, start_date, end_date) do
-    GenServer.call(pid, {:prices, epics, resolution, start_date, end_date})
+  def prices(pid, epic, resolution, start_date, end_date) do
+    GenServer.call(pid, {:prices, epic, resolution, start_date, end_date})
   end
 
   ## Callbacks
@@ -643,12 +630,12 @@ defmodule Ig.User do
   end
 
   def handle_call(
-        {:markets, epics},
+        {:markets, epic},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/markets/#{epics}", [
+      Ig.RestClient.get(demo, "/markets/#{epic}", [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
@@ -661,11 +648,11 @@ defmodule Ig.User do
   end
 
   def handle_call(
-        {:markets, epics, [_ | _] = optional_args},
+        {:markets, epics, filters},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
-    params = URI.encode_query(optional_args)
+    params = URI.encode_query(filters)
 
     {:ok, %HTTPoison.Response{body: body}} =
       Ig.RestClient.get(demo, "/markets/#{epics}?#{params}", [
@@ -679,39 +666,22 @@ defmodule Ig.User do
 
     {:reply, {:ok, response_body}, state}
   end
-
+  
   def handle_call(
-        {:markets, search_term: search_term},
+        {:prices, epic},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/markets?searchTerm=#{search_term}", [
-        {"X-IG-API-KEY", api_key},
-        {"X-SECURITY-TOKEN", security_token},
-        {"CST", cst},
-        {"VERSION", 2}
-      ])
-
-    response_body = Jason.decode!(body)
-
-    {:reply, {:ok, response_body}, state}
-  end
-
-  def handle_call(
-        {:prices, epics},
-        _from,
-        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) do
-    {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/prices/#{epics}", [
+      Ig.RestClient.get(demo, "/prices/#{epic}", [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
         {"VERSION", 3}
       ])
-
-    response_body = Jason.decode!(body)
+      
+    
+    response_body = decode_prices(body)
 
     {:reply, {:ok, response_body}, state}
   end
@@ -731,11 +701,38 @@ defmodule Ig.User do
         {"VERSION", 3}
       ])
 
-    response_body = Jason.decode!(body)
+    response_body = decode_prices(body)
 
     {:reply, {:ok, response_body}, state}
   end
 
+  defp decode_prices(body) do
+    %{
+      "prices" => prices_list,
+      "instrumentType" => type,
+      "metadata" => %{
+        "allowance" => allowance,
+        "size" => size,
+        "pageData" => %{
+          "pageSize" => page_size,
+          "pageNumber" => page_number,
+          "totalPages" => total_pages
+        }
+      }
+    } = Jason.decode!(body)
+
+    %{
+      prices:
+        prices_list
+        |> Enum.map(&Ig.Prices.new/1),
+      instrument_type: type,
+      metadata: %{
+        page_data: %{page_number: page_number, page_size: page_size, total_pages: total_pages},
+        size: size
+      }
+    }
+  end
+  
   def handle_call(
         {:prices, epic, resolution, num_points},
         _from,
@@ -749,26 +746,41 @@ defmodule Ig.User do
         {"VERSION", 2}
       ])
 
-    response_body = Jason.decode!(body)
+    response_body = decode_prices_with_points(body)
 
     {:reply, {:ok, response_body}, state}
   end
 
   def handle_call(
-        {:prices, epics, resolution, start_date, end_date},
+        {:prices, epic, resolution, start_date, end_date},
         _from,
         %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
       ) do
     {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/prices/#{epics}/#{resolution}/#{start_date}/#{end_date}", [
+      Ig.RestClient.get(demo, "/prices/#{epic}/#{resolution}/#{start_date}/#{end_date}", [
         {"X-IG-API-KEY", api_key},
         {"X-SECURITY-TOKEN", security_token},
         {"CST", cst},
         {"VERSION", 2}
       ])
 
-    response_body = Jason.decode!(body)
+    response_body = decode_prices_with_points(body)
 
     {:reply, {:ok, response_body}, state}
+  end
+  
+  defp decode_prices_with_points(body) do
+    %{
+      "prices" => prices_list,
+      "instrumentType" => type,
+      "allowance" => allowance,
+    } = Jason.decode!(body)
+
+    %{
+      prices:
+        prices_list
+        |> Enum.map(&Ig.Prices.new/1),
+      instrument_type: type,
+    }
   end
 end

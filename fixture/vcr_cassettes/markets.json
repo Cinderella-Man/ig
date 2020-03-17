@@ -15,7 +15,7 @@
     },
     "response": {
       "binary": false,
-      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":16980.0,\"deposit\":0.0,\"profitLoss\":0.0,\"available\":16980.0},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
+      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":16945.0,\"deposit\":870.75,\"profitLoss\":-81.5,\"available\":15992.75},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
       "headers": {
         "Server": "HAProxy",
         "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
@@ -32,8 +32,8 @@
         "Expires": "0",
         "Content-Type": "application/json;charset=UTF-8",
         "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
-        "Date": "Tue, 10 Mar 2020 22:53:40 GMT",
-        "Content-Length": "623",
+        "Date": "Wed, 11 Mar 2020 23:31:08 GMT",
+        "Content-Length": "629",
         "Connection": "keep-alive"
       },
       "status_code": 200,
@@ -58,7 +58,7 @@
     },
     "response": {
       "binary": false,
-      "body": "{\"instrument\":{\"epic\":\"ED.D.TL0GY.DAILY.IP\",\"expiry\":\"DFB\",\"name\":\"Tesla Inc (DE)\",\"forceOpenAllowed\":true,\"stopsLimitsAllowed\":true,\"lotSize\":1.0,\"unit\":\"AMOUNT\",\"type\":\"SHARES\",\"controlledRiskAllowed\":true,\"streamingPricesAvailable\":false,\"marketId\":\"TL0-DE\",\"currencies\":[{\"code\":\"EUR\",\"symbol\":\"E\",\"baseExchangeRate\":1.14062,\"exchangeRate\":0.9,\"isDefault\":false},{\"code\":\"GBP\",\"symbol\":\"£\",\"baseExchangeRate\":1.0,\"exchangeRate\":1.0,\"isDefault\":true}],\"sprintMarketsMinimumExpiryTime\":null,\"sprintMarketsMaximumExpiryTime\":null,\"marginDepositBands\":[{\"min\":0,\"max\":2,\"margin\":20,\"currency\":\"EUR\"},{\"min\":2,\"max\":10,\"margin\":20,\"currency\":\"EUR\"},{\"min\":10,\"max\":90,\"margin\":40,\"currency\":\"EUR\"},{\"min\":90,\"max\":null,\"margin\":75,\"currency\":\"EUR\"}],\"marginFactor\":20,\"marginFactorUnit\":\"PERCENTAGE\",\"slippageFactor\":{\"unit\":\"pct\",\"value\":100.0},\"limitedRiskPremium\":{\"value\":1,\"unit\":\"PERCENTAGE\"},\"openingHours\":{\"marketTimes\":[{\"openTime\":\"08:00\",\"closeTime\":\"16:30\"}]},\"expiryDetails\":{\"lastDealingDate\":\"2029-04-06T15:30\",\"settlementInfo\":\"The last dealing day is the Tuesday before the third Wednesday of the contract month. Expired bets will settle basis the closing bid or offer price of the relevant exchange as reported by Bloomberg, plus or minus closing IG spread.\"},\"rolloverDetails\":null,\"newsCode\":\"TSLA.DE\",\"chartCode\":\"TSLA\",\"country\":\"DE\",\"valueOfOnePip\":null,\"onePipMeans\":null,\"contractSize\":null,\"specialInfo\":[\"Unborrowable\",\"DEFAULT KNOCK OUT LEVEL DISTANCE\",\"MAX KNOCK OUT LEVEL DISTANCE\",\"No Controlled Risk\"]},\"dealingRules\":{\"minStepDistance\":{\"unit\":\"PERCENTAGE\",\"value\":1.0},\"minDealSize\":{\"unit\":\"POINTS\",\"value\":0.5},\"minControlledRiskStopDistance\":{\"unit\":\"PERCENTAGE\",\"value\":12.5},\"minNormalStopOrLimitDistance\":{\"unit\":\"POINTS\",\"value\":0.1},\"maxStopOrLimitDistance\":{\"unit\":\"PERCENTAGE\",\"value\":75.0},\"marketOrderPreference\":\"AVAILABLE_DEFAULT_OFF\",\"trailingStopsPreference\":\"AVAILABLE\"},\"snapshot\":{\"marketStatus\":\"EDITS_ONLY\",\"netChange\":70,\"percentageChange\":0.13,\"updateTime\":\"16:35:49\",\"delayTime\":0,\"bid\":54992.00,\"offer\":55268.00,\"high\":60990.00,\"low\":53246.00,\"binaryOdds\":null,\"decimalPlacesFactor\":2,\"scalingFactor\":1,\"controlledRiskExtraSpread\":165.39}}",
+      "body": "{\"instrument\":{\"epic\":\"ED.D.TL0GY.DAILY.IP\",\"expiry\":\"DFB\",\"name\":\"Tesla Inc (DE)\",\"forceOpenAllowed\":true,\"stopsLimitsAllowed\":true,\"lotSize\":1.0,\"unit\":\"AMOUNT\",\"type\":\"SHARES\",\"controlledRiskAllowed\":true,\"streamingPricesAvailable\":false,\"marketId\":\"TL0-DE\",\"currencies\":[{\"code\":\"EUR\",\"symbol\":\"E\",\"baseExchangeRate\":1.13816,\"exchangeRate\":0.9,\"isDefault\":false},{\"code\":\"GBP\",\"symbol\":\"£\",\"baseExchangeRate\":1.0,\"exchangeRate\":1.0,\"isDefault\":true}],\"sprintMarketsMinimumExpiryTime\":null,\"sprintMarketsMaximumExpiryTime\":null,\"marginDepositBands\":[{\"min\":0,\"max\":2,\"margin\":20,\"currency\":\"EUR\"},{\"min\":2,\"max\":10,\"margin\":20,\"currency\":\"EUR\"},{\"min\":10,\"max\":90,\"margin\":40,\"currency\":\"EUR\"},{\"min\":90,\"max\":null,\"margin\":75,\"currency\":\"EUR\"}],\"marginFactor\":20,\"marginFactorUnit\":\"PERCENTAGE\",\"slippageFactor\":{\"unit\":\"pct\",\"value\":100.0},\"limitedRiskPremium\":{\"value\":1,\"unit\":\"PERCENTAGE\"},\"openingHours\":{\"marketTimes\":[{\"openTime\":\"08:00\",\"closeTime\":\"16:30\"}]},\"expiryDetails\":{\"lastDealingDate\":\"2029-04-06T15:30\",\"settlementInfo\":\"The last dealing day is the Tuesday before the third Wednesday of the contract month. Expired bets will settle basis the closing bid or offer price of the relevant exchange as reported by Bloomberg, plus or minus closing IG spread.\"},\"rolloverDetails\":null,\"newsCode\":\"TSLA.DE\",\"chartCode\":\"TSLA\",\"country\":\"DE\",\"valueOfOnePip\":null,\"onePipMeans\":null,\"contractSize\":null,\"specialInfo\":[\"Unborrowable\",\"DEFAULT KNOCK OUT LEVEL DISTANCE\",\"MAX KNOCK OUT LEVEL DISTANCE\",\"No Controlled Risk\"]},\"dealingRules\":{\"minStepDistance\":{\"unit\":\"PERCENTAGE\",\"value\":1.0},\"minDealSize\":{\"unit\":\"POINTS\",\"value\":0.5},\"minControlledRiskStopDistance\":{\"unit\":\"PERCENTAGE\",\"value\":12.5},\"minNormalStopOrLimitDistance\":{\"unit\":\"POINTS\",\"value\":0.1},\"maxStopOrLimitDistance\":{\"unit\":\"PERCENTAGE\",\"value\":75.0},\"marketOrderPreference\":\"AVAILABLE_DEFAULT_OFF\",\"trailingStopsPreference\":\"AVAILABLE\"},\"snapshot\":{\"marketStatus\":\"EDITS_ONLY\",\"netChange\":1810,\"percentageChange\":3.28,\"updateTime\":\"16:35:36\",\"delayTime\":0,\"bid\":56798.00,\"offer\":57082.00,\"high\":57745.00,\"low\":54144.00,\"binaryOdds\":null,\"decimalPlacesFactor\":2,\"scalingFactor\":1,\"controlledRiskExtraSpread\":170.82}}",
       "headers": {
         "Server": "HAProxy",
         "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
@@ -73,8 +73,8 @@
         "Expires": "0",
         "Content-Type": "application/json",
         "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
-        "Date": "Tue, 10 Mar 2020 22:53:40 GMT",
-        "Content-Length": "2199",
+        "Date": "Wed, 11 Mar 2020 23:31:09 GMT",
+        "Content-Length": "2201",
         "Connection": "keep-alive"
       },
       "status_code": 200,
