@@ -377,6 +377,7 @@ defmodule IgTest do
       {:ok, pid} = Ig.start_link()
       {:ok, user_pid} = Ig.get_user(:user_name, pid)
       {:ok, _} = Ig.User.login(user_pid)
+
       {:ok, result} =
         Ig.User.transactions(user_pid, from: "2019-10-01T00:00:00", to: "2020-03-01T00:00:00")
 
@@ -648,7 +649,7 @@ defmodule IgTest do
 
       {:ok, result} = Ig.User.market_navigation(user_pid)
 
-      assert %{"markets" => _, "nodes" => [_ | _]} = result
+      assert %{markets: _, nodes: [_ | _]} = result
     end
   end
 
@@ -661,7 +662,7 @@ defmodule IgTest do
       node_id = "eur-usd"
       {:ok, result} = Ig.User.market_navigation(user_pid, node_id)
 
-      assert %{"markets" => _, "nodes" => nil} = result
+      assert %{markets: _, nodes: nil} = result
     end
   end
 
@@ -674,7 +675,7 @@ defmodule IgTest do
       epics = "ED.D.TL0GY.DAILY.IP"
       {:ok, result} = Ig.User.markets(user_pid, epics)
 
-      assert %{"instrument" => _, "dealingRules" => _, "snapshot" => _} = result
+      assert %{instrument: _, dealing_rules: _, snapshot: _} = result
     end
   end
 

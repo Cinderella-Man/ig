@@ -606,9 +606,23 @@ defmodule Ig.User do
         {"VERSION", 1}
       ])
 
-    response = Jason.decode!(body)
+    response = decode_market_navigation(body)
 
     {:reply, {:ok, response}, state}
+  end
+
+  defp decode_market_navigation(body) do
+    %{
+      "nodes" => nodes_list,
+      "markets" => markets
+    } = Jason.decode!(body)
+
+    %{
+      nodes:
+        nodes_list
+        |> Enum.map(&Ig.Node.new/1),
+      markets: markets
+    }
   end
 
   def handle_call(
@@ -624,9 +638,23 @@ defmodule Ig.User do
         {"VERSION", 1}
       ])
 
-    response_body = Jason.decode!(body)
+    response_body = decode_market_navigation_node_id(body)
 
     {:reply, {:ok, response_body}, state}
+  end
+
+  defp decode_market_navigation_node_id(body) do
+    %{
+      "nodes" => nodes,
+      "markets" => markets_list
+    } = Jason.decode!(body)
+
+    %{
+      nodes: nodes,
+      markets:
+        markets_list
+        |> Enum.map(&Ig.Market.new/1)
+    }
   end
 
   def handle_call(
@@ -642,7 +670,7 @@ defmodule Ig.User do
         {"VERSION", 3}
       ])
 
-    response_body = Jason.decode!(body)
+    response_body = decode_markets(body)
 
     {:reply, {:ok, response_body}, state}
   end
@@ -662,11 +690,25 @@ defmodule Ig.User do
         {"VERSION", 3}
       ])
 
-    response_body = Jason.decode!(body)
+    response_body = decode_markets(body)
 
     {:reply, {:ok, response_body}, state}
   end
-  
+
+  defp decode_markets(body) do
+    %{
+      "instrument" => instrument,
+      "dealingRules" => dealing_rules,
+      "snapshot" => snapshot
+    } = Jason.decode!(body)
+
+    %{
+      instrument: instrument,
+      dealing_rules: dealing_rules,
+      snapshot: snapshot
+    }
+  end
+
   def handle_call(
         {:prices, epic},
         _from,
@@ -679,8 +721,7 @@ defmodule Ig.User do
         {"CST", cst},
         {"VERSION", 3}
       ])
-      
-    
+
     response_body = decode_prices(body)
 
     {:reply, {:ok, response_body}, state}
@@ -732,7 +773,7 @@ defmodule Ig.User do
       }
     }
   end
-  
+
   def handle_call(
         {:prices, epic, resolution, num_points},
         _from,
@@ -768,19 +809,19 @@ defmodule Ig.User do
 
     {:reply, {:ok, response_body}, state}
   end
-  
+
   defp decode_prices_with_points(body) do
     %{
       "prices" => prices_list,
       "instrumentType" => type,
-      "allowance" => allowance,
+      "allowance" => allowance
     } = Jason.decode!(body)
 
     %{
       prices:
         prices_list
         |> Enum.map(&Ig.Prices.new/1),
-      instrument_type: type,
+      instrument_type: type
     }
   end
 end
