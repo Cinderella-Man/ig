@@ -679,6 +679,19 @@ defmodule IgTest do
     end
   end
 
+  test "markets with filters" do
+    use_cassette "markets_with_filters" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      epics = "ED.D.TL0GY.DAILY.IP"
+      {:ok, result} = Ig.User.markets(user_pid, epics, "SNAPSHOT_ONLY")
+
+      assert %{instrument: _, dealing_rules: _, snapshot: _} = result
+    end
+  end
+
   test "prices" do
     use_cassette "prices" do
       {:ok, pid} = Ig.start_link()

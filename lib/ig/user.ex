@@ -528,6 +528,154 @@ defmodule Ig.User do
     {:reply, {:ok, result}, state}
   end
 
+  def handle_call(
+        :market_navigation,
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/marketnavigation", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 1}
+      ])
+
+    response = decode_market_navigation(body)
+
+    {:reply, {:ok, response}, state}
+  end
+
+  def handle_call(
+        {:market_navigation, node_id},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/marketnavigation/#{node_id}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 1}
+      ])
+
+    response_body = decode_market_navigation_node_id(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:markets, epic},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/markets/#{epic}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = decode_markets(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:markets, epics, filters},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    params = URI.encode_query(filters)
+
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/markets/#{epics}?#{params}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = decode_markets(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epic},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/prices/#{epic}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = decode_prices(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epics, [_ | _] = optional_args},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    params = URI.encode_query(optional_args)
+
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, '/prices/#{epics}?#{params}', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = decode_prices(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epic, resolution, num_points},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, '/prices/#{epic}/#{resolution}/#{num_points}', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 2}
+      ])
+
+    response_body = decode_prices_with_points(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epic, resolution, start_date, end_date},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/prices/#{epic}/#{resolution}/#{start_date}/#{end_date}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 2}
+      ])
+
+    response_body = decode_prices_with_points(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
   defp decode_position(%{"market" => market, "position" => position}) do
     %{
       market: Ig.Market.new(market),
@@ -593,22 +741,19 @@ defmodule Ig.User do
     %{activity_struct | details: activity_details}
   end
 
-  def handle_call(
-        :market_navigation,
-        _from,
-        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) do
-    {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/marketnavigation", [
-        {"X-IG-API-KEY", api_key},
-        {"X-SECURITY-TOKEN", security_token},
-        {"CST", cst},
-        {"VERSION", 1}
-      ])
+  defp decode_prices_with_points(body) do
+    %{
+      "prices" => prices_list,
+      "instrumentType" => type,
+      "allowance" => _allowance
+    } = Jason.decode!(body)
 
-    response = decode_market_navigation(body)
-
-    {:reply, {:ok, response}, state}
+    %{
+      prices:
+        prices_list
+        |> Enum.map(&Ig.Prices.new/1),
+      instrument_type: type
+    }
   end
 
   defp decode_market_navigation(body) do
@@ -625,24 +770,6 @@ defmodule Ig.User do
     }
   end
 
-  def handle_call(
-        {:market_navigation, node_id},
-        _from,
-        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) do
-    {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/marketnavigation/#{node_id}", [
-        {"X-IG-API-KEY", api_key},
-        {"X-SECURITY-TOKEN", security_token},
-        {"CST", cst},
-        {"VERSION", 1}
-      ])
-
-    response_body = decode_market_navigation_node_id(body)
-
-    {:reply, {:ok, response_body}, state}
-  end
-
   defp decode_market_navigation_node_id(body) do
     %{
       "nodes" => nodes,
@@ -657,102 +784,12 @@ defmodule Ig.User do
     }
   end
 
-  def handle_call(
-        {:markets, epic},
-        _from,
-        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) do
-    {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/markets/#{epic}", [
-        {"X-IG-API-KEY", api_key},
-        {"X-SECURITY-TOKEN", security_token},
-        {"CST", cst},
-        {"VERSION", 3}
-      ])
-
-    response_body = decode_markets(body)
-
-    {:reply, {:ok, response_body}, state}
-  end
-
-  def handle_call(
-        {:markets, epics, filters},
-        _from,
-        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) do
-    params = URI.encode_query(filters)
-
-    {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/markets/#{epics}?#{params}", [
-        {"X-IG-API-KEY", api_key},
-        {"X-SECURITY-TOKEN", security_token},
-        {"CST", cst},
-        {"VERSION", 3}
-      ])
-
-    response_body = decode_markets(body)
-
-    {:reply, {:ok, response_body}, state}
-  end
-
-  defp decode_markets(body) do
-    %{
-      "instrument" => instrument,
-      "dealingRules" => dealing_rules,
-      "snapshot" => snapshot
-    } = Jason.decode!(body)
-
-    %{
-      instrument: instrument,
-      dealing_rules: dealing_rules,
-      snapshot: snapshot
-    }
-  end
-
-  def handle_call(
-        {:prices, epic},
-        _from,
-        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) do
-    {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/prices/#{epic}", [
-        {"X-IG-API-KEY", api_key},
-        {"X-SECURITY-TOKEN", security_token},
-        {"CST", cst},
-        {"VERSION", 3}
-      ])
-
-    response_body = decode_prices(body)
-
-    {:reply, {:ok, response_body}, state}
-  end
-
-  def handle_call(
-        {:prices, epics, [_ | _] = optional_args},
-        _from,
-        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) do
-    params = URI.encode_query(optional_args)
-
-    {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/prices/#{epics}?#{params}', [
-        {"X-IG-API-KEY", api_key},
-        {"X-SECURITY-TOKEN", security_token},
-        {"CST", cst},
-        {"VERSION", 3}
-      ])
-
-    response_body = decode_prices(body)
-
-    {:reply, {:ok, response_body}, state}
-  end
-
   defp decode_prices(body) do
     %{
       "prices" => prices_list,
       "instrumentType" => type,
       "metadata" => %{
-        "allowance" => allowance,
+        "allowance" => _allowance,
         "size" => size,
         "pageData" => %{
           "pageSize" => page_size,
@@ -774,54 +811,17 @@ defmodule Ig.User do
     }
   end
 
-  def handle_call(
-        {:prices, epic, resolution, num_points},
-        _from,
-        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) do
-    {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, '/prices/#{epic}/#{resolution}/#{num_points}', [
-        {"X-IG-API-KEY", api_key},
-        {"X-SECURITY-TOKEN", security_token},
-        {"CST", cst},
-        {"VERSION", 2}
-      ])
-
-    response_body = decode_prices_with_points(body)
-
-    {:reply, {:ok, response_body}, state}
-  end
-
-  def handle_call(
-        {:prices, epic, resolution, start_date, end_date},
-        _from,
-        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
-      ) do
-    {:ok, %HTTPoison.Response{body: body}} =
-      Ig.RestClient.get(demo, "/prices/#{epic}/#{resolution}/#{start_date}/#{end_date}", [
-        {"X-IG-API-KEY", api_key},
-        {"X-SECURITY-TOKEN", security_token},
-        {"CST", cst},
-        {"VERSION", 2}
-      ])
-
-    response_body = decode_prices_with_points(body)
-
-    {:reply, {:ok, response_body}, state}
-  end
-
-  defp decode_prices_with_points(body) do
+  defp decode_markets(body) do
     %{
-      "prices" => prices_list,
-      "instrumentType" => type,
-      "allowance" => allowance
+      "instrument" => instrument,
+      "dealingRules" => dealing_rules,
+      "snapshot" => snapshot
     } = Jason.decode!(body)
 
     %{
-      prices:
-        prices_list
-        |> Enum.map(&Ig.Prices.new/1),
-      instrument_type: type
+      instrument: instrument,
+      dealing_rules: dealing_rules,
+      snapshot: snapshot
     }
   end
 end
