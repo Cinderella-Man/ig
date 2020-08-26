@@ -471,7 +471,6 @@ defmodule IgTest do
       {:ok, pid} = Ig.start_link()
       {:ok, user_pid} = Ig.get_user(:user_name, pid)
       {:ok, _} = Ig.User.login(user_pid)
-
       {:ok, result} = Ig.User.positions(user_pid)
 
       assert result.positions == [
@@ -598,7 +597,6 @@ defmodule IgTest do
       {:ok, pid} = Ig.start_link()
       {:ok, user_pid} = Ig.get_user(:user_name, pid)
       {:ok, _} = Ig.User.login(user_pid)
-
       {:ok, result} = Ig.User.position(user_pid, "DIAAAADE7PDYNAT")
 
       assert result ==
@@ -640,6 +638,102 @@ defmodule IgTest do
                    trailingStopDistance: nil
                  }
                }
+    end
+  end
+
+  test "returns all top-level nodes in the market navigation hierarchy." do
+    use_cassette "market_navigation" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      {:ok, result} = Ig.User.market_navigation(user_pid)
+
+      assert %{markets: _, nodes: [_ | _]} = result
+    end
+  end
+
+  test "market navigation with node_id" do
+    use_cassette "market_navigation_node_id" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      node_id = "eur-usd"
+      {:ok, result} = Ig.User.market_navigation(user_pid, node_id)
+
+      assert %{markets: _, nodes: nil} = result
+    end
+  end
+
+  test "markets" do
+    use_cassette "markets" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      epics = "ED.D.TL0GY.DAILY.IP"
+      {:ok, result} = Ig.User.markets(user_pid, epics)
+
+      assert %{instrument: _, dealing_rules: _, snapshot: _} = result
+    end
+  end
+
+  test "markets with filters" do
+    use_cassette "markets_with_filters" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      epics = "ED.D.TL0GY.DAILY.IP"
+      {:ok, result} = Ig.User.markets(user_pid, epics, "SNAPSHOT_ONLY")
+
+      assert %{instrument: _, dealing_rules: _, snapshot: _} = result
+    end
+  end
+
+  test "prices" do
+    use_cassette "prices" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      epics = "ED.D.TL0GY.DAILY.IP"
+      {:ok, result} = Ig.User.prices(user_pid, epics)
+
+      assert %{instrument_type: _, metadata: _, prices: [_ | _]} = result
+    end
+  end
+
+  test "prices with resolution, numPoints" do
+    use_cassette "prices_resolution_num_points" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      epics = "ED.D.TL0GY.DAILY.IP"
+      resolution = "MINUTE"
+      num_points = 10
+
+      {:ok, result} = Ig.User.prices(user_pid, epics, resolution, num_points)
+
+      assert %{instrument_type: _, prices: [_ | _]} = result
+    end
+  end
+
+  test "prices with resolution, start_date and end_date" do
+    use_cassette "prices_resolution_start_date_end_date" do
+      {:ok, pid} = Ig.start_link()
+      {:ok, user_pid} = Ig.get_user(:user_name, pid)
+      {:ok, _} = Ig.User.login(user_pid)
+
+      epics = "ED.D.TL0GY.DAILY.IP"
+      resolution = "MINUTE"
+      start_date = "2020-01-01 00:00:00"
+      end_date = "2020-01-02 00:00:00"
+      {:ok, result} = Ig.User.prices(user_pid, epics, resolution, start_date, end_date)
+
+      assert %{instrument_type: _, prices: _} = result
     end
   end
 end

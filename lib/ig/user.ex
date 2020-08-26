@@ -186,6 +186,137 @@ defmodule Ig.User do
     GenServer.call(pid, :get_state)
   end
 
+  @doc """
+  Returns all top-level nodes (market categories) in the market navigation hierarchy.
+
+  Version: 1
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=550
+  """
+  def market_navigation(pid) do
+    GenServer.call(pid, :market_navigation)
+  end
+
+  @doc """
+  Returns all sub-nodes of the given node in the market navigation hierarchy.
+
+  Require params:
+  - nodeId  (String)  The identifier of the node to browse
+
+  Version: 1
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=544
+  """
+  def market_navigation(pid, node_id) do
+    GenServer.call(pid, {:market_navigation, node_id})
+  end
+
+  @doc """
+  Returns the details of the given market.
+
+  Require params:
+  - epic  (String)  The epic of the market to be retrieved
+
+  Version: 3
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=528
+  """
+  def markets(pid, epic) do
+    GenServer.call(pid, {:markets, epic})
+  end
+
+  @doc """
+  Returns the details of the given markets.
+
+  Require params:
+  - epics  (String)  The epic of the market to be retrieved
+
+  Optional params:
+  (Default = ALL)
+  - filter (MarketDetailsFilterType)	MarketDetailsFilterType
+                                      Filter for the market details
+                                      ALL	          Display all market details. Market details includes all instrument 
+                                                    data, dealing rules and market snapshot values for all epics 
+                                                    specified.
+                                      SNAPSHOT_ONLY	Display the market snapshot and minimal instrument data fields. 
+                                                    This mode is faster because it only sets the epic and instrument 
+                                                    type in the instrument data and the market data snapshot values 
+                                                    with all the other fields being unset for each epic specified.
+
+  Version: 2
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=524
+  """
+  def markets(pid, epics, filter \\ "ALL") do
+    GenServer.call(pid, {:markets, epics, filter: filter})
+  end
+
+  @doc """
+  Returns historical prices for a particular instrument. By default returns the minute prices within the last 10 minutes.
+
+  Require params:
+  - epic  (String)  Instrument epic
+
+  Optional params:
+  - resolution  (Resolution)  Price resolution
+                              Defines the resolution of requested prices.
+                              DAY	        1 day
+                              HOUR	      1 hour
+                              HOUR_2	    2 hours
+                              HOUR_3	    3 hours
+                              HOUR_4	    4 hours
+                              MINUTE	    1 minute
+                              MINUTE_10	  10 minutes
+                              MINUTE_15	  15 minutes
+                              MINUTE_2	  2 minutes
+                              MINUTE_3	  3 minutes
+                              MINUTE_30	  30 minutes
+                              MINUTE_5	  5 minutes
+                              MONTH	      1 month
+                              SECOND	    1 second
+                              WEEK	      1 week
+  - from        (DateTime)	  Start date time (yyyy-MM-dd'T'HH:mm:ss)
+  - to          (DateTime)	  End date time (yyyy-MM-dd'T'HH:mm:ss)
+  - max         (int)	        Limits the number of price points (not applicable if a date range has been specified)
+  - pageSize    (int)	        Page size (disable paging = 0)
+  - pageNumber  (int)         Page number
+                              
+  Version: 3
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=521
+  """
+  def prices(pid, epic) do
+    GenServer.call(pid, {:prices, epic})
+  end
+
+  @doc """
+  Returns a list of historical prices for the given epic, resolution and number of data points
+
+  Require params:
+  - epic        (String)      Instrument epic
+  - resolution  (Resolution)	Price resolution (MINUTE, MINUTE_2, MINUTE_3, MINUTE_5, MINUTE_10, MINUTE_15, MINUTE_30, 
+                              HOUR, HOUR_2, HOUR_3, HOUR_4, DAY, WEEK, MONTH)
+  - numPoints   (int)	        Number of data points required
+
+  Version: 2
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=552
+  """
+  def prices(pid, epic, resolution, num_points) do
+    GenServer.call(pid, {:prices, epic, resolution, num_points})
+  end
+
+  @doc """
+  Returns a list of historical prices for the given epic, resolution and date range.
+
+  Require params:
+  - epic        (String)      Instrument epic
+  - resolution  (Resolution)	Price resolution (MINUTE, MINUTE_2, MINUTE_3, MINUTE_5, MINUTE_10, MINUTE_15, MINUTE_30, 
+                              HOUR, HOUR_2, HOUR_3, HOUR_4, DAY, WEEK, MONTH)
+  - startDate   (String)	    Start date (yyyy-MM-dd HH:mm:ss)
+  - endDate     (String)	    End date (yyyy-MM-dd HH:mm:ss). Must be later then the start date.
+
+  Version: 2
+  API Docs: https://labs.ig.com/rest-trading-api-reference/service-detail?id=530
+  """
+  def prices(pid, epic, resolution, start_date, end_date) do
+    GenServer.call(pid, {:prices, epic, resolution, start_date, end_date})
+  end
+
   ## Callbacks
 
   def handle_call(:get_state, _from, state) do
@@ -397,6 +528,154 @@ defmodule Ig.User do
     {:reply, {:ok, result}, state}
   end
 
+  def handle_call(
+        :market_navigation,
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/marketnavigation", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 1}
+      ])
+
+    response = decode_market_navigation(body)
+
+    {:reply, {:ok, response}, state}
+  end
+
+  def handle_call(
+        {:market_navigation, node_id},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/marketnavigation/#{node_id}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 1}
+      ])
+
+    response_body = decode_market_navigation_node_id(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:markets, epic},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/markets/#{epic}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = decode_markets(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:markets, epics, filters},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    params = URI.encode_query(filters)
+
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/markets/#{epics}?#{params}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = decode_markets(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epic},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/prices/#{epic}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = decode_prices(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epics, [_ | _] = optional_args},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    params = URI.encode_query(optional_args)
+
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, '/prices/#{epics}?#{params}', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 3}
+      ])
+
+    response_body = decode_prices(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epic, resolution, num_points},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, '/prices/#{epic}/#{resolution}/#{num_points}', [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 2}
+      ])
+
+    response_body = decode_prices_with_points(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
+  def handle_call(
+        {:prices, epic, resolution, start_date, end_date},
+        _from,
+        %State{cst: cst, api_key: api_key, demo: demo, security_token: security_token} = state
+      ) do
+    {:ok, %HTTPoison.Response{body: body}} =
+      Ig.RestClient.get(demo, "/prices/#{epic}/#{resolution}/#{start_date}/#{end_date}", [
+        {"X-IG-API-KEY", api_key},
+        {"X-SECURITY-TOKEN", security_token},
+        {"CST", cst},
+        {"VERSION", 2}
+      ])
+
+    response_body = decode_prices_with_points(body)
+
+    {:reply, {:ok, response_body}, state}
+  end
+
   defp decode_position(%{"market" => market, "position" => position}) do
     %{
       market: Ig.Market.new(market),
@@ -460,5 +739,89 @@ defmodule Ig.User do
       end
 
     %{activity_struct | details: activity_details}
+  end
+
+  defp decode_prices_with_points(body) do
+    %{
+      "prices" => prices_list,
+      "instrumentType" => type,
+      "allowance" => _allowance
+    } = Jason.decode!(body)
+
+    %{
+      prices:
+        prices_list
+        |> Enum.map(&Ig.Prices.new/1),
+      instrument_type: type
+    }
+  end
+
+  defp decode_market_navigation(body) do
+    %{
+      "nodes" => nodes_list,
+      "markets" => markets
+    } = Jason.decode!(body)
+
+    %{
+      nodes:
+        nodes_list
+        |> Enum.map(&Ig.Node.new/1),
+      markets: markets
+    }
+  end
+
+  defp decode_market_navigation_node_id(body) do
+    %{
+      "nodes" => nodes,
+      "markets" => markets_list
+    } = Jason.decode!(body)
+
+    %{
+      nodes: nodes,
+      markets:
+        markets_list
+        |> Enum.map(&Ig.Market.new/1)
+    }
+  end
+
+  defp decode_prices(body) do
+    %{
+      "prices" => prices_list,
+      "instrumentType" => type,
+      "metadata" => %{
+        "allowance" => _allowance,
+        "size" => size,
+        "pageData" => %{
+          "pageSize" => page_size,
+          "pageNumber" => page_number,
+          "totalPages" => total_pages
+        }
+      }
+    } = Jason.decode!(body)
+
+    %{
+      prices:
+        prices_list
+        |> Enum.map(&Ig.Prices.new/1),
+      instrument_type: type,
+      metadata: %{
+        page_data: %{page_number: page_number, page_size: page_size, total_pages: total_pages},
+        size: size
+      }
+    }
+  end
+
+  defp decode_markets(body) do
+    %{
+      "instrument" => instrument,
+      "dealingRules" => dealing_rules,
+      "snapshot" => snapshot
+    } = Jason.decode!(body)
+
+    %{
+      instrument: instrument,
+      dealing_rules: dealing_rules,
+      snapshot: snapshot
+    }
   end
 end

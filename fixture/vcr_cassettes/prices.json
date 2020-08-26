@@ -1,0 +1,84 @@
+[
+  {
+    "request": {
+      "body": "{\"identifier\":\"***\",\"password\":\"***\"}",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "VERSION": "2"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/session"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":17097.76,\"deposit\":0.0,\"profitLoss\":0.0,\"available\":17097.76},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "Cache-Control": "no-cache, no-store",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json;charset=UTF-8",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Tue, 17 Mar 2020 22:59:26 GMT",
+        "Content-Length": "625",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "VERSION": "3"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/prices/ED.D.TL0GY.DAILY.IP"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"prices\":[{\"snapshotTime\":\"2020/03/17 16:20:00\",\"snapshotTimeUTC\":\"2020-03-17T16:20:00\",\"openPrice\":{\"bid\":41710.00,\"ask\":42085.00,\"lastTraded\":null},\"closePrice\":{\"bid\":40898.00,\"ask\":41278.00,\"lastTraded\":null},\"highPrice\":{\"bid\":41840.00,\"ask\":42085.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":40898.00,\"ask\":41278.00,\"lastTraded\":null},\"lastTradedVolume\":198},{\"snapshotTime\":\"2020/03/17 16:21:00\",\"snapshotTimeUTC\":\"2020-03-17T16:21:00\",\"openPrice\":{\"bid\":40902.00,\"ask\":41268.00,\"lastTraded\":null},\"closePrice\":{\"bid\":40793.00,\"ask\":41213.00,\"lastTraded\":null},\"highPrice\":{\"bid\":40957.00,\"ask\":41544.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":40588.00,\"ask\":41097.00,\"lastTraded\":null},\"lastTradedVolume\":384},{\"snapshotTime\":\"2020/03/17 16:22:00\",\"snapshotTimeUTC\":\"2020-03-17T16:22:00\",\"openPrice\":{\"bid\":40803.00,\"ask\":41203.00,\"lastTraded\":null},\"closePrice\":{\"bid\":40808.00,\"ask\":41143.00,\"lastTraded\":null},\"highPrice\":{\"bid\":40987.00,\"ask\":41624.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":40678.00,\"ask\":41103.00,\"lastTraded\":null},\"lastTradedVolume\":149},{\"snapshotTime\":\"2020/03/17 16:23:00\",\"snapshotTimeUTC\":\"2020-03-17T16:23:00\",\"openPrice\":{\"bid\":40748.00,\"ask\":41138.00,\"lastTraded\":null},\"closePrice\":{\"bid\":40429.00,\"ask\":41138.00,\"lastTraded\":null},\"highPrice\":{\"bid\":40783.00,\"ask\":41193.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":40324.00,\"ask\":40777.00,\"lastTraded\":null},\"lastTradedVolume\":59},{\"snapshotTime\":\"2020/03/17 16:24:00\",\"snapshotTimeUTC\":\"2020-03-17T16:24:00\",\"openPrice\":{\"bid\":40434.00,\"ask\":41128.00,\"lastTraded\":null},\"closePrice\":{\"bid\":40528.00,\"ask\":40822.00,\"lastTraded\":null},\"highPrice\":{\"bid\":40673.00,\"ask\":41128.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":40169.00,\"ask\":40807.00,\"lastTraded\":null},\"lastTradedVolume\":31},{\"snapshotTime\":\"2020/03/17 16:25:00\",\"snapshotTimeUTC\":\"2020-03-17T16:25:00\",\"openPrice\":{\"bid\":40538.00,\"ask\":40812.00,\"lastTraded\":null},\"closePrice\":{\"bid\":40548.00,\"ask\":40942.00,\"lastTraded\":null},\"highPrice\":{\"bid\":40678.00,\"ask\":41022.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":40244.00,\"ask\":40807.00,\"lastTraded\":null},\"lastTradedVolume\":242},{\"snapshotTime\":\"2020/03/17 16:26:00\",\"snapshotTimeUTC\":\"2020-03-17T16:26:00\",\"openPrice\":{\"bid\":40359.00,\"ask\":40937.00,\"lastTraded\":null},\"closePrice\":{\"bid\":40364.00,\"ask\":40631.00,\"lastTraded\":null},\"highPrice\":{\"bid\":40583.00,\"ask\":40942.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":40149.00,\"ask\":40616.00,\"lastTraded\":null},\"lastTradedVolume\":321},{\"snapshotTime\":\"2020/03/17 16:27:00\",\"snapshotTimeUTC\":\"2020-03-17T16:27:00\",\"openPrice\":{\"bid\":40274.00,\"ask\":40626.00,\"lastTraded\":null},\"closePrice\":{\"bid\":39900.00,\"ask\":40165.00,\"lastTraded\":null},\"highPrice\":{\"bid\":40314.00,\"ask\":40626.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":39900.00,\"ask\":40140.00,\"lastTraded\":null},\"lastTradedVolume\":190},{\"snapshotTime\":\"2020/03/17 16:28:00\",\"snapshotTimeUTC\":\"2020-03-17T16:28:00\",\"openPrice\":{\"bid\":39890.00,\"ask\":40155.00,\"lastTraded\":null},\"closePrice\":{\"bid\":39606.00,\"ask\":40346.00,\"lastTraded\":null},\"highPrice\":{\"bid\":39890.00,\"ask\":40346.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":39601.00,\"ask\":40000.00,\"lastTraded\":null},\"lastTradedVolume\":200},{\"snapshotTime\":\"2020/03/17 16:29:00\",\"snapshotTimeUTC\":\"2020-03-17T16:29:00\",\"openPrice\":{\"bid\":39815.00,\"ask\":40280.00,\"lastTraded\":null},\"closePrice\":{\"bid\":39646.00,\"ask\":40025.00,\"lastTraded\":null},\"highPrice\":{\"bid\":39835.00,\"ask\":40280.00,\"lastTraded\":null},\"lowPrice\":{\"bid\":39601.00,\"ask\":39930.00,\"lastTraded\":null},\"lastTradedVolume\":0}],\"instrumentType\":\"SHARES\",\"metadata\":{\"allowance\":{\"remainingAllowance\":9990,\"totalAllowance\":10000,\"allowanceExpiry\":604799},\"size\":10,\"pageData\":{\"pageSize\":20,\"pageNumber\":1,\"totalPages\":1}}}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Tue, 17 Mar 2020 22:59:26 GMT",
+        "Content-Length": "3702",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

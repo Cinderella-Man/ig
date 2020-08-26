@@ -1,0 +1,84 @@
+[
+  {
+    "request": {
+      "body": "{\"identifier\":\"***\",\"password\":\"***\"}",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "VERSION": "2"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/session"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"accountType\":\"SPREADBET\",\"accountInfo\":{\"balance\":17241.57,\"deposit\":0.0,\"profitLoss\":0.0,\"available\":17241.57},\"currencyIsoCode\":\"GBP\",\"currencySymbol\":\"£\",\"currentAccountId\":\"ZI5WI\",\"lightstreamerEndpoint\":\"https://demo-apd.marketdatasystems.com\",\"accounts\":[{\"accountId\":\"ZI5WH\",\"accountName\":\"Demo-cfd\",\"preferred\":false,\"accountType\":\"CFD\"},{\"accountId\":\"ZI5WI\",\"accountName\":\"Demo-SpreadBet\",\"preferred\":true,\"accountType\":\"SPREADBET\"}],\"clientId\":\"101308471\",\"timezoneOffset\":0,\"hasActiveDemoAccounts\":true,\"hasActiveLiveAccounts\":true,\"trailingStopsEnabled\":false,\"reroutingEnvironment\":null,\"dealingEnabled\":true}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "Cache-Control": "no-cache, no-store",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json;charset=UTF-8",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Thu, 26 Mar 2020 21:31:38 GMT",
+        "Content-Length": "625",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json; charset=UTF-8",
+        "X-IG-API-KEY": "***",
+        "X-SECURITY-TOKEN": "***",
+        "CST": "***",
+        "VERSION": "1"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://demo-api.ig.com/gateway/deal/marketnavigation"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"nodes\":[{\"id\":\"97601\",\"name\":\"Indices\"},{\"id\":\"195235\",\"name\":\"Forex\"},{\"id\":\"101515\",\"name\":\"Commodities Metals Energies\"},{\"id\":\"668394\",\"name\":\"Cryptocurrency\"},{\"id\":\"108092\",\"name\":\"Bonds and Moneymarket\"},{\"id\":\"184730\",\"name\":\"ETFs, ETCs & Trackers\"},{\"id\":\"180500\",\"name\":\"Shares - UK\"},{\"id\":\"97695\",\"name\":\"Shares - UK International (IOB)\"},{\"id\":\"298158\",\"name\":\"Shares - US (All Sessions)\"},{\"id\":\"97477\",\"name\":\"Shares - US\"},{\"id\":\"114058\",\"name\":\"Shares - Austria\"},{\"id\":\"114036\",\"name\":\"Shares - Belgium\"},{\"id\":\"103185\",\"name\":\"Shares - Canada\"},{\"id\":\"419769\",\"name\":\"Shares - Denmark\"},{\"id\":\"99514\",\"name\":\"Shares - Finland\"},{\"id\":\"113659\",\"name\":\"Shares - France\"},{\"id\":\"172904\",\"name\":\"Shares - LSE (UK)\"},{\"id\":\"97466\",\"name\":\"Shares - Germany\"},{\"id\":\"100437\",\"name\":\"Shares - Greece\"},{\"id\":\"105775\",\"name\":\"Shares - Hong Kong\"},{\"id\":\"421257\",\"name\":\"Shares - Ireland (LSE)\"},{\"id\":\"99578822\",\"name\":\"Shares - Ireland (Euronext Dublin)\"},{\"id\":\"113665\",\"name\":\"Shares - Ireland (ISEQ)\"},{\"id\":\"105509\",\"name\":\"Shares - Netherlands\"},{\"id\":\"127489792\",\"name\":\"Shares - New Zealand\"},{\"id\":\"99808\",\"name\":\"Shares - Norway\"},{\"id\":\"99787\",\"name\":\"Shares - Portugal\"},{\"id\":\"105781\",\"name\":\"Shares - Singapore\"},{\"id\":\"100066\",\"name\":\"Shares - South Africa\"},{\"id\":\"113681\",\"name\":\"Shares - Sweden\"},{\"id\":\"99814\",\"name\":\"Shares - Switzerland\"},{\"id\":\"324080\",\"name\":\"IPOs\"},{\"id\":\"77976799\",\"name\":\"Options (Australia 200)\"},{\"id\":\"245938\",\"name\":\"Options (Eu Stocks 50)\"},{\"id\":\"188760\",\"name\":\"Options (France 40)\"},{\"id\":\"122250\",\"name\":\"Options (FTSE)\"},{\"id\":\"97612\",\"name\":\"Options (Germany)\"},{\"id\":\"92462573\",\"name\":\"Options (HS 50)\"},{\"id\":\"111915265\",\"name\":\"Options (Japan 225)\"},{\"id\":\"236490\",\"name\":\"Options (Netherlands 25)\"},{\"id\":\"188763\",\"name\":\"Options (Spain 35)\"},{\"id\":\"319963\",\"name\":\"Options (Sweden 30)\"},{\"id\":\"157168018\",\"name\":\"Options (Taiwan Index)\"},{\"id\":\"267039\",\"name\":\"Options (US 500)\"},{\"id\":\"89291253\",\"name\":\"Options (US Tech 100)\"},{\"id\":\"122505\",\"name\":\"Options (Wall St)\"},{\"id\":\"255072\",\"name\":\"Options on FX Majors\"},{\"id\":\"56719751\",\"name\":\"Options (Volatility Index)\"},{\"id\":\"195913\",\"name\":\"Options on Metals, Energies\"},{\"id\":\"5371876\",\"name\":\"Weekend Indices\"}],\"markets\":null}",
+      "headers": {
+        "Server": "HAProxy",
+        "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+        "X-STATE": "live",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type, X-IG-API-KEY, CST, X-SECURITY-TOKEN, VERSION, _method, Authorization, IG-ACCOUNT-ID",
+        "Access-Control-Expose-Headers": "CST, X-SECURITY-TOKEN",
+        "Access-Control-Max-Age": "3600",
+        "X-REQUEST-ID": "NOT_AVAILABLE",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "application/json",
+        "P3P": "CP=\"ALL DSP LAW OTPa OUR IND UNI CNT\"",
+        "Date": "Thu, 26 Mar 2020 21:31:39 GMT",
+        "Content-Length": "2254",
+        "Connection": "keep-alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

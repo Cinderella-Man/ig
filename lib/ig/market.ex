@@ -23,7 +23,6 @@ defmodule Ig.Market do
   ]
   ```
   """
-
   defstruct [
     :bid,
     :delayTime,
